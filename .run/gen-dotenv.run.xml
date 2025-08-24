@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="gen-dotenv" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="demo-chatroom" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="FILE" />
+    <package value="github.com/roeldev/demo-chatroom" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/gen-dotenv.go" />
+    <method v="2" />
+  </configuration>
+</component>
