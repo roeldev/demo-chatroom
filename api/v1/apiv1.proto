@@ -1,0 +1,255 @@
+edition = "2023";
+
+package api.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/roeldev/demo-chatroom/api/v1;apiv1";
+option features.field_presence = IMPLICIT;
+
+////////////////////////////////////////////////////////////////////////////////
+// General messages
+message UUID {
+    string value = 1;
+}
+
+message Color {
+    string value = 1;
+}
+
+enum UserStatus {
+    Default = 0;
+    Busy = 1;
+    Away = 2;
+}
+
+enum UserFlag {
+    None = 0;
+    IsBot = 1;
+}
+
+message UserDetails {
+    string name = 1;
+    string initials = 2; // max 3 chars
+    Color color1 = 3; // avatar background
+    Color color2 = 4; // avatar text
+}
+
+message UserMention {
+    UUID user_id = 1;
+    string user_name = 2;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+service AuthService {
+    rpc Join(JoinRequest) returns (JoinResponse) {}
+    rpc Renew(google.protobuf.Empty) returns (RenewResponse) {}
+    rpc Leave(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
+
+message JoinRequest {
+    UserDetails user = 1;
+    UserFlag flags = 2;
+}
+
+message JoinResponse {
+    string token = 1;
+}
+
+message RenewResponse {
+    string token = 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+service UserService {
+    rpc ActiveUsers(google.protobuf.Empty) returns (ActiveUsersResponse) {}
+    rpc UpdateDetails(UpdateDetailsRequest) returns (google.protobuf.Empty) {}
+    rpc UpdateStatus(UpdateStatusRequest) returns (google.protobuf.Empty) {}
+    rpc IndicateTyping(IndicateTypingRequest) returns (google.protobuf.Empty) {}
+    rpc SendChat(SendChatRequest) returns (google.protobuf.Empty) {}
+    rpc EditChat(ChatEditEvent) returns (google.protobuf.Empty) {}
+    rpc EmojiReply(EmojiReplyRequest) returns (google.protobuf.Empty) {}
+}
+
+message ActiveUsersResponse {
+    message User {
+        UUID id = 1;
+        UserDetails details = 2;
+        UserFlag flags = 3;
+        UserStatus status = 4;
+    }
+
+    google.protobuf.Timestamp time = 1;
+    repeated User users = 2;
+}
+
+message UpdateDetailsRequest {
+    UserDetails details = 1;
+}
+
+message UpdateStatusRequest {
+    UserStatus status = 1;
+}
+
+message IndicateTypingRequest {
+    // no receiver = global chatroom
+    UUID receiver_id = 1;
+    bool typing = 2;
+}
+
+//message Chat {
+//    optional UUID receiver_id = 1; // no receiver = global chatroom
+//    optional UUID chat_id = 2;
+//}
+
+message SendChatRequest {
+    google.protobuf.Timestamp time = 1;
+    // no receiver = global chatroom
+    UUID receiver_id = 2;
+    UUID reply_chat_id = 3;
+    string text = 4;
+    repeated UserMention mentions = 5;
+}
+
+message EditChatRequest {
+    google.protobuf.Timestamp time = 1;
+    UUID chat_id = 2;
+    string text = 3;
+}
+
+message EmojiReplyRequest {
+    google.protobuf.Timestamp time = 1;
+    UUID reply_chat_id = 3;
+    bytes emoji = 4;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+message EventUser {
+    UUID id = 1;
+    UserDetails details = 2;
+}
+
+service EventsService {
+    rpc PreviousEvents(PreviousEventsRequest) returns (PreviousEventsResponse) {}
+    rpc EventStream(google.protobuf.Empty) returns (stream EventStreamResponse) {}
+}
+
+message PreviousEventsRequest {
+    google.protobuf.Timestamp until_time = 1;
+    uint64 limit = 2;
+}
+
+message PreviousEventsResponse {
+    message PreviousEvent {
+        google.protobuf.Timestamp time = 1;
+        oneof event {
+            UserJoinEvent user_join = 10;
+            UserLeaveEvent user_leave = 11;
+            UserUpdateEvent user_update = 12;
+
+            ChatSentEvent chat_sent = 20;
+        }
+    }
+
+    repeated PreviousEvent history = 1;
+}
+
+message EventStreamRequest {
+    oneof stream {
+        string start = 1;
+        string ack = 2;
+    }
+}
+
+message EventStreamResponse {
+    google.protobuf.Timestamp time = 1;
+    oneof event {
+        UserJoinEvent user_join = 10;
+        UserLeaveEvent user_leave = 11;
+        UserUpdateEvent user_update = 12;
+        UserStatusEvent user_status = 13;
+        UserTypingEvent user_typing = 14;
+
+        ChatSentEvent chat_sent = 20;
+        ChatEditEvent chat_edit = 21;
+        EmojiReplyEvent emoji_reply = 22;
+        EmojiRemoveEvent emoji_remove = 23;
+    }
+}
+
+// User joins
+message UserJoinEvent {
+    EventUser user = 1;
+    UserFlag flags = 2;
+}
+
+// User leaves
+message UserLeaveEvent {
+    EventUser user = 1;
+}
+
+// User update's its details
+message UserUpdateEvent {
+    EventUser user = 1;
+    UserDetails before = 2;
+}
+
+// User status is changed
+message UserStatusEvent {
+    EventUser user = 1;
+    UserStatus status = 2;
+    UserStatus before = 3;
+}
+
+// User is typing a message
+message UserTypingEvent {
+    EventUser user = 1;
+    // receiver user's UUID, or global chatroom on empty
+    UUID receiver_id = 2;
+    bool typing = 3;
+}
+
+// User sends chat message
+message ChatSentEvent {
+    message Edit {
+        google.protobuf.Timestamp time = 1;
+        string original = 2;
+    }
+
+    message EmojiReply {
+        google.protobuf.Timestamp time = 1;
+        EventUser user = 2;
+        bytes emoji = 3;
+    }
+
+    UUID chat_id = 1; // id of this chat
+    EventUser user = 2;
+    // receiver user's UUID, or global chatroom on empty
+    UUID receiver_id = 3;
+    UUID reply_chat_id = 4;
+    string text = 5;
+    Edit text_edit = 6;
+    repeated UserMention mentions = 7;
+    repeated EmojiReply emojis = 8;
+}
+
+message ChatEditEvent {
+    UUID chat_id = 1;
+    string text = 2;
+}
+
+message EmojiReplyEvent {
+    UUID chat_id = 1;
+    bytes emoji = 2;
+}
+
+message EmojiRemoveEvent {
+    UUID chat_id = 1;
+    bytes emoji = 2;
+}
