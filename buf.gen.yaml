@@ -1,0 +1,20 @@
+version: v2
+plugins:
+  - local:
+      - go
+      - run
+      - google.golang.org/protobuf/cmd/protoc-gen-go
+    out: ./
+    opt:
+      - paths=source_relative
+  - local:
+      - go
+      - run
+      - connectrpc.com/connect/cmd/protoc-gen-connect-go
+    out: ./
+    opt: paths=source_relative
+  - local:
+      - pnpx
+      - "@bufbuild/protoc-gen-es"
+    out: ./chatroom-web/src/lib
+    opt: target=ts
