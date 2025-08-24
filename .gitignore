@@ -1,0 +1,11 @@
+.idea
+*.exe
+*.tgz
+.env.local
+.env.*.local
+coverage.out
+*.pprof
+go.work
+go.work.sum
+/package.json
+/pnpm-lock.yaml
