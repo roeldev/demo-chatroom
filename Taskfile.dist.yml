@@ -1,0 +1,86 @@
+# https://taskfile.dev/installation/
+version: '3'
+
+tasks:
+  dev:web:
+    desc: Run chatroom-dev frontend dev server
+    dir: ./chatroom-web
+    cmds:
+      - pnpm run dev
+
+  bot:chatter:
+    desc: Run chatter-bot
+    cmds:
+      - go run -tags=dev ./cmd/chatter-bot
+
+  bot:dialogue:
+    desc: Run dialogue-bot
+    cmds:
+      - go run -tags=dev ./cmd/dialogue-bot
+
+  bot:welcome:
+    desc: Run welcome-bot
+    cmds:
+      - go run -tags=dev ./cmd/welcome-bot
+
+  gen:
+    desc: Generate code
+    cmds:
+      - task: gen:api
+      - go generate ./...
+      - task: gen:charts
+
+  gen:api:
+    desc: Generate API code with buf
+    cmds:
+      - go run github.com/bufbuild/buf/cmd/buf@latest build
+      - go run github.com/bufbuild/buf/cmd/buf@latest generate
+
+  gen:env:
+    desc: Generate default .env files
+    cmds:
+      - go run ./cmd/gen-dotenv.go
+
+  gen:charts:
+    desc: Generate Helm charts README
+    # https://github.com/norwoodj/helm-docs/
+    cmds:
+      - go run github.com/norwoodj/helm-docs/cmd/helm-docs@latest -t=README.tmpl.md -s=file -b=flat
+
+
+  build:
+    desc: Build the project
+    cmds:
+      - docker compose build
+
+  run:
+    desc: Build and run the project
+    cmds:
+      - task: build
+      - docker compose up
+
+
+  ci:lint:
+    desc: Run linter via act
+    cmds:
+      - act -j lint-go
+
+  ci:test:
+    desc: Run tests via act
+    cmds:
+      - act -j test
+
+  chart:lint:
+    desc: Lint Helm chart
+    cmds:
+      - helm lint ./charts/chatroom
+
+  chart:debug:
+    desc: Debug Helm chart
+    cmds:
+      - helm template --debug --release-name chatroom ./charts/chatroom
+
+  chart:pack:
+    cmds:
+      - helm package charts/chatroom
+
