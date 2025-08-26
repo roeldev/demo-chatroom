@@ -2,7 +2,7 @@
 // Use of this source code is governed by a GPL-style
 // license that can be found in the LICENSE file.
 
-package chatbot
+package chatroom
 
 import (
 	"context"
@@ -19,13 +19,20 @@ import (
 type authServiceClient = apiv1connect.AuthServiceClient
 type userServiceClient = apiv1connect.UserServiceClient
 
-type Config struct {
+type ClientConfig struct {
 	ServerHost string             `env:"API_SERVER_HOST" default:"localhost"`
 	ServerPort serv.Port          `env:"API_SERVER_PORT" default:"8080"`
 	HTTPClient connect.HTTPClient `env:"-"`
 }
 
-func (c Config) BaseURL() string {
+func (c ClientConfig) httpClient() connect.HTTPClient {
+	if c.HTTPClient == nil {
+		return http.DefaultClient
+	}
+	return c.HTTPClient
+}
+
+func (c ClientConfig) BaseURL() string {
 	// todo: tls support
 	return "http://" + serv.JoinHostPort(c.ServerHost, c.ServerPort)
 }
@@ -38,48 +45,46 @@ type Client struct {
 	interceptor connect.Interceptor
 }
 
-func New(conf Config) *Client {
-	if conf.HTTPClient == nil {
-		conf.HTTPClient = http.DefaultClient
-	}
-
+func NewClient(conf ClientConfig) *Client {
+	client := conf.httpClient()
 	baseURL := conf.BaseURL()
 	interceptor := apiv1connect.NewClientInterceptor("")
-	interceptors := connect.WithInterceptors(interceptor)
 
 	return &Client{
-		httpClient:  conf.HTTPClient,
+		httpClient:  client,
 		interceptor: interceptor,
 
 		authServiceClient: apiv1connect.NewAuthServiceClient(
-			conf.HTTPClient,
+			client,
 			baseURL,
-			interceptors,
+			//connect.WithGRPC(),
+			connect.WithInterceptors(interceptor),
 		),
 		userServiceClient: apiv1connect.NewUserServiceClient(
-			conf.HTTPClient,
+			client,
 			baseURL,
-			interceptors,
+			//connect.WithGRPC(),
+			connect.WithInterceptors(interceptor),
 		),
 	}
 }
 
-func (bot *Client) HTTPClient() connect.HTTPClient { return bot.httpClient }
+func (c *Client) HTTPClient() connect.HTTPClient { return c.httpClient }
 
-func (bot *Client) Interceptor() connect.Interceptor { return bot.interceptor }
+func (c *Client) Interceptor() connect.Interceptor { return c.interceptor }
 
-func (bot *Client) Login(ctx context.Context, user *apiv1.UserDetails) error {
-	if _, err := bot.Join(ctx, connect.NewRequest(&apiv1.JoinRequest{
+func (c *Client) Login(ctx context.Context, user *apiv1.UserDetails) error {
+	if _, err := c.Join(ctx, connect.NewRequest(&apiv1.JoinRequest{
 		User:  user,
-		Flags: apiv1.UserFlag_IsBot,
+		Flags: apiv1.UserFlag_USER_FLAG_IS_BOT,
 	})); err != nil {
 		return errors.Wrap(err, "failed to join")
 	}
 	return nil
 }
 
-func (bot *Client) Logout(ctx context.Context) error {
-	if _, err := bot.Leave(ctx, connect.NewRequest(&emptypb.Empty{})); err != nil {
+func (c *Client) Logout(ctx context.Context) error {
+	if _, err := c.Leave(ctx, connect.NewRequest(&emptypb.Empty{})); err != nil {
 		return errors.Wrap(err, "failed to gracefully leave")
 	}
 	return nil
