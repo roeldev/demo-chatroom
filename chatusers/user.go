@@ -100,7 +100,7 @@ func InitialsFromName(name string) string {
 
 	parts := strings.Fields(name)
 	if len(parts) >= 2 {
-		return strings.ToUpper(string(parts[0][0]) + string(parts[1][1]))
+		return strings.ToUpper(string(parts[0][0]) + string(parts[1][0]))
 	}
 	return strings.ToUpper(string(parts[0][0]))
 }
