@@ -21,14 +21,14 @@ message Color {
 }
 
 enum UserStatus {
-    Default = 0;
-    Busy = 1;
-    Away = 2;
+    USER_STATUS_DEFAULT = 0;
+    USER_STATUS_BUSY = 1;
+    USER_STATUS_AWAY = 2;
 }
 
 enum UserFlag {
-    None = 0;
-    IsBot = 1;
+    USER_FLAG_NONE = 0;
+    USER_FLAG_IS_BOT = 1;
 }
 
 message UserDetails {
