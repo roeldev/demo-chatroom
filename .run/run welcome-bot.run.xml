@@ -12,7 +12,7 @@
   <configuration default="false" name="run welcome-bot" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="demo-chatroom" />
     <working_directory value="$PROJECT_DIR$" />
-    <go_parameters value="-tags=dev -buildvcs=false" />
+    <go_parameters value="-tags=dev" />
     <kind value="PACKAGE" />
     <package value="github.com/roeldev/demo-chatroom/cmd/welcome-bot" />
     <directory value="$PROJECT_DIR$" />
