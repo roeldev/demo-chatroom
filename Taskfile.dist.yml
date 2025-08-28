@@ -9,9 +9,9 @@ tasks:
       - pnpm run dev
 
   bot:chatter:
-    desc: Run chatter-bot
+    desc: Run chatter-bot(s)
     cmds:
-      - go run -tags=dev ./cmd/chatter-bot
+      - docker compose up --build chatter-bot
 
   bot:dialogue:
     desc: Run dialogue-bot
