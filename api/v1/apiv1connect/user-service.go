@@ -16,7 +16,6 @@ import (
 	"github.com/roeldev/demo-chatroom/chatusers"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var _ UserServiceHandler = (*UserService)(nil)
@@ -33,25 +32,6 @@ func NewUserService(log zerolog.Logger, users chatusers.UsersStore, pub chateven
 		users: users,
 		event: pub,
 	}
-}
-
-func (svc *UserService) ActiveUsers(_ context.Context, _ *connect.Request[emptypb.Empty]) (*connect.Response[apiv1.ActiveUsersResponse], error) {
-	users := svc.users.All()
-	response := make([]*apiv1.ActiveUsersResponse_User, 0, len(users))
-
-	for uid, user := range users {
-		response = append(response, &apiv1.ActiveUsersResponse_User{
-			Id:      apiv1.NewUUID(uid),
-			Details: apiv1.NewUserDetails(user.UserDetails),
-			Flags:   apiv1.NewUserFlags(user.Flags),
-			Status:  apiv1.NewUserStatus(user.Status),
-		})
-	}
-
-	return connect.NewResponse(&apiv1.ActiveUsersResponse{
-		Time:  timestamppb.Now(),
-		Users: response,
-	}), nil
 }
 
 func (svc *UserService) UpdateDetails(_ context.Context, req *connect.Request[apiv1.UpdateDetailsRequest]) (*connect.Response[emptypb.Empty], error) {
