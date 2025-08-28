@@ -21,16 +21,22 @@ import (
 var _ UserServiceHandler = (*UserService)(nil)
 
 type UserService struct {
-	log   zerolog.Logger
-	users chatusers.UsersStore
-	event chatevents.Publisher
+	log    zerolog.Logger
+	users  chatusers.UsersStore
+	typing chatusers.TypingIndicator
+	event  chatevents.Publisher
 }
 
-func NewUserService(log zerolog.Logger, users chatusers.UsersStore, pub chatevents.Publisher) *UserService {
+func NewUserService(log zerolog.Logger, users chatusers.UsersStore, typing chatusers.TypingIndicator, pub chatevents.Publisher) *UserService {
+	if typing == nil {
+		typing = chatusers.NewTypingIndicator(0)
+	}
+
 	return &UserService{
-		log:   log,
-		users: users,
-		event: pub,
+		log:    log,
+		users:  users,
+		typing: typing,
+		event:  pub,
 	}
 }
 
@@ -66,13 +72,13 @@ func (svc *UserService) IndicateTyping(ctx context.Context, req *connect.Request
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 
-	// todo: timer laten lopen die na ~5 sec. typing op false zet en dit published
-
-	go svc.event.Publish(&event.UserTypingEvent{
-		UserID:      user.ID,
-		UserDetails: user.UserDetails,
-		ReceiverID:  receiver,
-		IsTyping:    req.Msg.Typing,
+	svc.typing.IndicateTyping(user.ID, req.Msg.Typing, func(typing bool) {
+		svc.event.Publish(&event.UserTypingEvent{
+			UserID:      user.ID,
+			UserDetails: user.UserDetails,
+			ReceiverID:  receiver,
+			IsTyping:    typing,
+		})
 	})
 
 	return connect.NewResponse(&emptypb.Empty{}), nil
@@ -97,7 +103,7 @@ func (svc *UserService) SendChat(ctx context.Context, req *connect.Request[apiv1
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }
 
-func (svc *UserService) EditChat(ctx context.Context, c *connect.Request[apiv1.ChatEditEvent]) (*connect.Response[emptypb.Empty], error) {
+func (svc *UserService) EditChat(ctx context.Context, c *connect.Request[apiv1.EditChatRequest]) (*connect.Response[emptypb.Empty], error) {
 	//TODO implement me
 	panic("implement me")
 }
