@@ -11,6 +11,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/go-pogo/errors"
+	"github.com/google/uuid"
 	"github.com/roeldev/demo-chatroom/api/v1"
 	"github.com/roeldev/demo-chatroom/chatauth"
 	"github.com/roeldev/demo-chatroom/chatevents"
@@ -176,7 +177,15 @@ func (eh *eventHandler) HandleEvent(e chatevents.Event) {
 	eh.mut.RLock()
 	defer eh.mut.RUnlock()
 
-	for _, ch := range eh.subs {
+	for user, ch := range eh.subs {
+		if re := e.AsReceiverEvent(); re != nil {
+			receiver := re.GetReceiverID()
+			if receiver != uuid.Nil && receiver != user {
+				// event is not meant for user
+				continue
+			}
+		}
+
 		ch <- e
 	}
 }
