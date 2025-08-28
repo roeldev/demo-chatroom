@@ -5,6 +5,8 @@
 package chatroom
 
 import (
+	"time"
+
 	"connectrpc.com/connect"
 	connectcors "connectrpc.com/cors"
 	"github.com/go-pogo/errors"
@@ -20,15 +22,17 @@ import (
 )
 
 type Config struct {
-	Logger         logger.Config       `env:",include"`
-	Server         webapp.ServerConfig `env:",include"`
-	AllowedOrigins []string            `env:"CORS_ALLOW_ORIGINS"`
+	Logger                 logger.Config       `env:",include"`
+	Server                 webapp.ServerConfig `env:",include"`
+	AllowedOrigins         []string            `env:"CORS_ALLOW_ORIGINS"`
+	TypingIndicatorTimeout time.Duration       `default:"5s"`
 }
 
 var _ serv.RoutesRegisterer = (*Service)(nil)
 
 type Service struct {
 	log     zerolog.Logger
+	conf    Config
 	auth    chatauth.SignerParser
 	manager *chatauth.Manager
 	history *chatevents.HistoryHandler
@@ -39,10 +43,11 @@ type Service struct {
 	cors        *cors.Cors
 }
 
-func NewService(conf Config, log *logger.Logger, auth chatauth.SignerParser, opts ...Option) (*Service, error) {
+func NewService(conf Config, log *logger.Logger, opts ...Option) (*Service, error) {
+	var err error
 	svc := &Service{
 		log:  log.Logger,
-		auth: auth,
+		conf: conf,
 		cors: cors.New(cors.Options{
 			AllowedOrigins: conf.AllowedOrigins,
 			AllowedMethods: connectcors.AllowedMethods(),
@@ -51,14 +56,14 @@ func NewService(conf Config, log *logger.Logger, auth chatauth.SignerParser, opt
 		}),
 	}
 
-	var err error
-	for _, opt := range opts {
-		err = errors.Append(err, opt(svc))
-	}
-	if err != nil {
+	if err = svc.applyOpts(opts); err != nil {
 		return nil, err
 	}
 
+	// todo: auth via priv/pub certs
+	if svc.auth, err = chatauth.NewJWTAuth(); err != nil {
+		return nil, err
+	}
 	if svc.users == nil {
 		svc.users = chatusers.NewUsersStore(8)
 	}
@@ -77,9 +82,22 @@ func NewService(conf Config, log *logger.Logger, auth chatauth.SignerParser, opt
 	return svc, nil
 }
 
+func (svc *Service) applyOpts(opts []Option) error {
+	var err error
+	for _, opt := range opts {
+		if opt == nil {
+			continue
+		}
+
+		err = errors.Append(err, opt(svc))
+	}
+	return err
+}
+
 func (svc *Service) RegisterRoutes(rh serv.RouteHandler) {
 	routes := []serv.Route{
 		svc.authService(),
+		svc.registryService(),
 		svc.userService(),
 		svc.eventsService(),
 	}
@@ -101,9 +119,26 @@ func (svc *Service) authService() serv.Route {
 	}
 }
 
+func (svc *Service) registryService() serv.Route {
+	path, handler := apiv1connect.NewRegistryServiceHandler(
+		apiv1connect.NewRegistryService(svc.log, svc.users),
+		connect.WithInterceptors(svc.interceptor),
+	)
+	return serv.Route{
+		Name:    "registry-service",
+		Pattern: path,
+		Handler: handler,
+	}
+}
+
 func (svc *Service) userService() serv.Route {
 	path, handler := apiv1connect.NewUserServiceHandler(
-		apiv1connect.NewUserService(svc.log, svc.users, svc.broker),
+		apiv1connect.NewUserService(
+			svc.log,
+			svc.users,
+			chatusers.NewTypingIndicator(svc.conf.TypingIndicatorTimeout),
+			svc.broker,
+		),
 		connect.WithInterceptors(svc.interceptor),
 	)
 	return serv.Route{
@@ -115,7 +150,12 @@ func (svc *Service) userService() serv.Route {
 
 func (svc *Service) eventsService() serv.Route {
 	path, handler := apiv1connect.NewEventsServiceHandler(
-		apiv1connect.NewEventsService(svc.log, svc.history, svc.broker, svc.manager),
+		apiv1connect.NewEventsService(
+			svc.log,
+			svc.history,
+			svc.broker,
+			svc.manager,
+		),
 		connect.WithInterceptors(svc.interceptor),
 	)
 	return serv.Route{
