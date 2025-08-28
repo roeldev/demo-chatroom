@@ -2,28 +2,20 @@
 // Use of this source code is governed by a GPL-style
 // license that can be found in the LICENSE file.
 
-package welcomebot
+package chatbot
 
 import (
 	"context"
 
 	"connectrpc.com/connect"
 	"github.com/go-pogo/errors"
-	"github.com/go-pogo/webapp/logger"
+	chatroom "github.com/roeldev/demo-chatroom"
 	apiv1 "github.com/roeldev/demo-chatroom/api/v1"
 	"github.com/roeldev/demo-chatroom/api/v1/apiv1connect"
-	"github.com/roeldev/demo-chatroom/chatbot"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
-
-type Config struct {
-	Logger logger.Config  `env:",include"`
-	Bot    chatbot.Config `env:",include"`
-}
-
-type botClient = chatbot.Client
 
 type WelcomeBot struct {
 	*botClient
@@ -32,16 +24,15 @@ type WelcomeBot struct {
 	log zerolog.Logger
 }
 
-func New(conf chatbot.Config, log zerolog.Logger) *WelcomeBot {
-	bot := chatbot.New(conf)
-
+func NewWelcomeBot(conf chatroom.ClientConfig, log zerolog.Logger) *WelcomeBot {
+	client := chatroom.NewClient(conf)
 	return &WelcomeBot{
 		log:       log,
-		botClient: bot,
+		botClient: client,
 		events: apiv1connect.NewEventsServiceClient(
-			bot.HTTPClient(),
+			client.HTTPClient(),
 			conf.BaseURL(),
-			connect.WithInterceptors(bot.Interceptor()),
+			connect.WithInterceptors(client.Interceptor()),
 		),
 	}
 }
@@ -58,6 +49,20 @@ func (bot *WelcomeBot) Login(ctx context.Context, user *apiv1.UserDetails) error
 		return errors.Wrap(err, "failed to send generic welcome chat")
 	}
 	return nil
+}
+
+func (bot *WelcomeBot) Logout(ctx context.Context) (err error) {
+	defer errors.AppendFunc(&err, func() error {
+		return bot.botClient.Logout(ctx)
+	})
+
+	if _, err = bot.SendChat(ctx, connect.NewRequest(&apiv1.SendChatRequest{
+		Time: timestamppb.Now(),
+		Text: "Goodbye all!",
+	})); err != nil {
+		err = errors.Wrap(err, "failed to send generic goodbye chat")
+	}
+	return err
 }
 
 func (bot *WelcomeBot) WelcomeUser(ctx context.Context, uid string, name string) error {
@@ -84,7 +89,7 @@ func (bot *WelcomeBot) ListenForEvents(ctx context.Context) error {
 	bot.log.Debug().Msg("start listening for events")
 	stream, err := bot.events.EventStream(ctx, connect.NewRequest(&emptypb.Empty{}))
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to open stream")
 	}
 
 	bot.log.Debug().Msg("listening for events...")
@@ -102,4 +107,25 @@ func (bot *WelcomeBot) ListenForEvents(ctx context.Context) error {
 		}
 	}
 	return stream.Err()
+}
+
+func (bot *WelcomeBot) Run(ctx context.Context) error {
+	ctx, cancelListen := context.WithCancelCause(ctx)
+
+	go func() {
+		defer cancelListen(nil)
+		if err := bot.ListenForEvents(ctx); err != nil && !errors.Is(err, context.Canceled) {
+			cancelListen(err)
+		}
+	}()
+
+	<-ctx.Done()
+	if err := bot.Logout(context.Background()); err != nil {
+		return errors.Append(
+			context.Cause(ctx),
+			errors.Wrap(err, "failed to gracefully leave"),
+		)
+	}
+
+	return context.Cause(ctx)
 }
