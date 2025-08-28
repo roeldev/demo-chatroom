@@ -16,7 +16,6 @@ import (
 	"github.com/go-pogo/webapp/autoenv"
 	"github.com/go-pogo/webapp/logger"
 	"github.com/roeldev/demo-chatroom"
-	"github.com/roeldev/demo-chatroom/chatauth"
 	logpkg "github.com/rs/zerolog/log"
 )
 
@@ -27,21 +26,26 @@ func main() {
 	}
 
 	log := logger.New(conf.Logger)
-	app, err := setup(conf, log)
+	base, err := setup(conf, log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to setup")
 	}
 
-	if err = webapp.Run(context.Background(),
-		app.Run,
-	); err != nil && !errors.Is(err, context.Canceled) {
+	// create chatroom service
+	service, err := chatroom.NewService(conf, log)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to create service")
+	}
+	service.RegisterRoutes(base.RouteHandler())
+
+	// run services
+	ctx := context.Background()
+	if err = webapp.Run(ctx, base.Run); err != nil && !errors.Is(err, context.Canceled) {
 		log.Err(err).Msg("error during execution")
 	}
 
 	// shutdown services
-	if err = webapp.ShutdownTimeout(context.Background(), 10*time.Second,
-		app.Shutdown,
-	); err != nil {
+	if err = webapp.ShutdownTimeout(context.Background(), 10*time.Second, base.Shutdown); err != nil {
 		log.Err(err).Msg("error during shutdown")
 	}
 
@@ -91,18 +95,5 @@ func setup(conf chatroom.Config, log *logger.Logger) (*webapp.Base, error) {
 	server.Config.WriteTimeout = 0
 	server.Config.IdleTimeout = 0
 	server.Config.MaxHeaderBytes = http.DefaultMaxHeaderBytes
-
-	// todo: auth via priv/pub certs
-	auth, err := chatauth.NewJWTAuth()
-	if err != nil {
-		return nil, err
-	}
-
-	api, err := chatroom.NewService(conf, log, auth)
-	if err != nil {
-		return nil, err
-	}
-
-	api.RegisterRoutes(base.RouteHandler())
 	return base, nil
 }
