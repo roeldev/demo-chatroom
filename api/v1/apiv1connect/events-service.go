@@ -15,6 +15,7 @@ import (
 	"github.com/roeldev/demo-chatroom/api/v1"
 	"github.com/roeldev/demo-chatroom/chatauth"
 	"github.com/roeldev/demo-chatroom/chatevents"
+	"github.com/roeldev/demo-chatroom/chatevents/event"
 	"github.com/roeldev/demo-chatroom/chatusers"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -50,10 +51,10 @@ func (svc *EventsService) PreviousEvents(_ context.Context, req *connect.Request
 	events := svc.history.ListEvents(until, req.Msg.Limit)
 	history := make([]*apiv1.PreviousEventsResponse_PreviousEvent, 0, len(events))
 
-	for _, he := range events {
+	for _, evt := range events {
 		history = append(history, &apiv1.PreviousEventsResponse_PreviousEvent{
-			Time:  timestamppb.New(he.Time),
-			Event: apiv1.NewPreviousEventsResponseEvent(he.Type),
+			Time:  timestamppb.New(evt.Time),
+			Event: apiv1.NewPreviousEventsResponseEvent(evt.Type),
 		})
 	}
 
@@ -65,7 +66,7 @@ func (svc *EventsService) PreviousEvents(_ context.Context, req *connect.Request
 // EventStream streams chat related events to any connected client.
 // https://connectrpc.com/docs/go/streaming
 func (svc *EventsService) EventStream(ctx context.Context, _ *connect.Request[emptypb.Empty], stream *connect.ServerStream[apiv1.EventStreamResponse]) error {
-	streamStart := time.Now() // todo: used for debugging
+	streamStart := time.Now()
 
 	user := getUser(ctx)
 	svc.log.Debug().
@@ -88,21 +89,26 @@ func (svc *EventsService) EventStream(ctx context.Context, _ *connect.Request[em
 streamLoop:
 	for {
 		select {
-		case event, more := <-ch:
+		case evt, more := <-ch:
 			if !more {
 				break streamLoop
 			}
 
+			if ut, ok := evt.Type.(*event.UserTypingEvent); ok && ut.UserID == user.ID {
+				// ignore current user typing events
+				continue streamLoop
+			}
+
 			streamErr := stream.Send(&apiv1.EventStreamResponse{
-				Time:  timestamppb.New(event.Time),
-				Event: apiv1.NewEventStreamResponseEvent(event.Type),
+				Time:  timestamppb.New(evt.Time),
+				Event: apiv1.NewEventStreamResponseEvent(evt.Type),
 			})
 			if streamErr == nil {
 				svc.log.Debug().
 					Bool("more", more).
-					Stringer("open", event.Time.Sub(streamStart)).
-					EmbedObject(event).
-					Stringer("user", user).
+					Stringer("open", evt.Time.Sub(streamStart)).
+					EmbedObject(evt).
+					Stringer("to", user).
 					Msg("sent stream event")
 				continue streamLoop
 			}
@@ -110,8 +116,8 @@ streamLoop:
 			// todo: return on connect.CodeUnauthenticated
 			svc.log.Warn().
 				Bool("more", more).
-				Stringer("open", event.Time.Sub(streamStart)).
-				EmbedObject(event).
+				Stringer("open", evt.Time.Sub(streamStart)).
+				EmbedObject(evt).
 				Stringer("user", user).
 				Err(streamErr).
 				Msg("stream error")
