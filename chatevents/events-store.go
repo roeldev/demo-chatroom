@@ -28,6 +28,8 @@ type eventsStore struct {
 	index, size uint8
 }
 
+// NewEventsStore returns a simple in-memory [EventsStore] with a specified
+// size limit.
 func NewEventsStore(size uint8) EventsStore {
 	return &eventsStore{
 		events: make([]Event, size),

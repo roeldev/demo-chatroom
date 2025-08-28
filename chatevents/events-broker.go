@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/roeldev/demo-chatroom/chatevents/event"
 	"github.com/rs/zerolog"
 )
 
@@ -20,7 +21,7 @@ type EventHandlerFunc func(e Event)
 func (fn EventHandlerFunc) HandleEvent(e Event) { fn(e) }
 
 type Publisher interface {
-	Publish(typ EventType)
+	Publish(typ event.Type)
 }
 
 var _ Publisher = (*EventsBroker)(nil)
@@ -48,7 +49,7 @@ func (eb *EventsBroker) Handle(h EventHandler) {
 	eb.handlers = append(eb.handlers, h)
 }
 
-func (eb *EventsBroker) Publish(typ EventType) {
+func (eb *EventsBroker) Publish(typ event.Type) {
 	e := Event{
 		Time: time.Now(),
 		Type: typ,

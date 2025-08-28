@@ -26,7 +26,11 @@ type EmojiReply struct {
 	Emoji       string
 }
 
-var _ zerolog.LogObjectMarshaler = (*ChatEvent)(nil)
+var (
+	_ UserEvent                  = (*ChatEvent)(nil)
+	_ ReceiverEvent              = (*ChatEvent)(nil)
+	_ zerolog.LogObjectMarshaler = (*ChatEvent)(nil)
+)
 
 type ChatEvent struct {
 	event
@@ -40,6 +44,10 @@ type ChatEvent struct {
 	Mentions     map[chatusers.UserID]string
 	EmojiReplies map[chatusers.UserID]EmojiReply
 }
+
+func (e *ChatEvent) GetUserID() chatusers.UserID           { return e.UserID }
+func (e *ChatEvent) GetUserDetails() chatusers.UserDetails { return e.UserDetails }
+func (e *ChatEvent) GetReceiverID() chatusers.UserID       { return e.ReceiverID }
 
 func (e *ChatEvent) MarshalZerologObject(ze *zerolog.Event) {
 	ze.Stringer("chat_id", e.ChatID)
@@ -76,28 +84,13 @@ func (e *ChatEvent) RemoveEmojiReply(uid chatusers.UserID) {
 	delete(e.EmojiReplies, uid)
 }
 
+var _ ReceiverEvent = (*ChatEditEvent)(nil)
+
 type ChatEditEvent struct {
 	event
-	ChatID ChatID
-	Text   string
+	ChatID     ChatID
+	ReceiverID chatusers.UserID
+	Text       string
 }
 
-type EmojiReplyEvent struct {
-	event
-	UserID      chatusers.UserID
-	UserDetails chatusers.UserDetails
-	ReplyChatID ChatID
-	Emoji       string
-}
-
-type EmojiRemoveEvent struct {
-	event
-	UserID      chatusers.UserID
-	ReplyChatID ChatID
-}
-
-func (e *ChatEvent) GetUserID() chatusers.UserID      { return e.UserID }
-func (e EmojiReplyEvent) GetUserID() chatusers.UserID { return e.UserID }
-
-func (e *ChatEvent) GetUserDetails() chatusers.UserDetails      { return e.UserDetails }
-func (e EmojiReplyEvent) GetUserDetails() chatusers.UserDetails { return e.UserDetails }
+func (c *ChatEditEvent) GetReceiverID() chatusers.UserID { return c.ReceiverID }

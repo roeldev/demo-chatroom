@@ -7,31 +7,49 @@ package chatevents
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/roeldev/demo-chatroom/chatevents/event"
 	"github.com/roeldev/demo-chatroom/chatusers"
 	"github.com/rs/zerolog"
 )
 
-type EventType = event.Type
-
-//type ChatID = uuid.UUID
-
 var _ zerolog.LogObjectMarshaler = (*Event)(nil)
 
 type Event struct {
 	Time time.Time
-	Type EventType
+	Type event.Type
 }
 
-func (e Event) MarshalZerologObject(zl *zerolog.Event) {
-	zl.Time("etime", e.Time)
+// AsUserEvent casts Type as a [event.UserEvent] and returns it or nil.
+func (e Event) AsUserEvent() event.UserEvent {
+	if ue, ok := e.Type.(event.UserEvent); ok {
+		return ue
+	}
+	return nil
+}
+
+// AsReceiverEvent casts Type as a [event.ReceiverEvent] and returns it or nil.
+func (e Event) AsReceiverEvent() event.ReceiverEvent {
+	if re, ok := e.Type.(event.ReceiverEvent); ok {
+		return re
+	}
+	return nil
+}
+
+func (e Event) MarshalZerologObject(ze *zerolog.Event) {
+	ze.Time("etime", e.Time)
 	if obj, ok := e.Type.(zerolog.LogObjectMarshaler); ok {
-		zl.EmbedObject(obj)
+		ze.EmbedObject(obj)
 		return
 	}
 
-	zl.Type("type", e.Type)
-	if ue, ok := e.Type.(event.UserEvent); ok {
-		zl.Str("user", chatusers.IdentifierString(ue.GetUserID(), ue.GetUserDetails()))
+	ze.Type("type", e.Type)
+	if ue := e.AsUserEvent(); ue != nil {
+		ze.Str("user", chatusers.IdentifierString(ue.GetUserID(), ue.GetUserDetails()))
+	}
+	if re := e.AsReceiverEvent(); re != nil {
+		if rid := re.GetReceiverID(); rid != uuid.Nil {
+			ze.Stringer("receiver_id", rid)
+		}
 	}
 }
