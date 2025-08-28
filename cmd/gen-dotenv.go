@@ -2,8 +2,6 @@
 // Use of this source code is governed by a GPL-style
 // license that can be found in the LICENSE file.
 
-//go:build ignore
-
 package main
 
 import (
@@ -13,7 +11,7 @@ import (
 	"github.com/go-pogo/env/envfile"
 	"github.com/go-pogo/errors"
 	"github.com/roeldev/demo-chatroom"
-	"github.com/roeldev/demo-chatroom/app/welcome-bot"
+	"github.com/roeldev/demo-chatroom/chatbot"
 )
 
 func main() {
@@ -22,7 +20,8 @@ func main() {
 
 	for dir, conf := range map[string]any{
 		"api-server":  chatroom.Config{},
-		"welcome-bot": welcomebot.Config{},
+		"chatter-bot": chatbot.Config{},
+		"welcome-bot": chatbot.Config{},
 	} {
 		dir = filepath.Join(base, dir)
 		errors.FatalOnErr(envfile.Generate(dir, filepath.Join(dir, ".env"), conf))
