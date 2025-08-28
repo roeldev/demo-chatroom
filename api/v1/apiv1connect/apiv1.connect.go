@@ -24,6 +24,8 @@ const _ = connect.IsAtLeastVersion1_13_0
 const (
 	// AuthServiceName is the fully-qualified name of the AuthService service.
 	AuthServiceName = "api.v1.AuthService"
+	// RegistryServiceName is the fully-qualified name of the RegistryService service.
+	RegistryServiceName = "api.v1.RegistryService"
 	// UserServiceName is the fully-qualified name of the UserService service.
 	UserServiceName = "api.v1.UserService"
 	// EventsServiceName is the fully-qualified name of the EventsService service.
@@ -40,12 +42,15 @@ const (
 const (
 	// AuthServiceJoinProcedure is the fully-qualified name of the AuthService's Join RPC.
 	AuthServiceJoinProcedure = "/api.v1.AuthService/Join"
+	// AuthServiceKeepaliveProcedure is the fully-qualified name of the AuthService's Keepalive RPC.
+	AuthServiceKeepaliveProcedure = "/api.v1.AuthService/Keepalive"
 	// AuthServiceRenewProcedure is the fully-qualified name of the AuthService's Renew RPC.
 	AuthServiceRenewProcedure = "/api.v1.AuthService/Renew"
 	// AuthServiceLeaveProcedure is the fully-qualified name of the AuthService's Leave RPC.
 	AuthServiceLeaveProcedure = "/api.v1.AuthService/Leave"
-	// UserServiceActiveUsersProcedure is the fully-qualified name of the UserService's ActiveUsers RPC.
-	UserServiceActiveUsersProcedure = "/api.v1.UserService/ActiveUsers"
+	// RegistryServiceActiveUsersProcedure is the fully-qualified name of the RegistryService's
+	// ActiveUsers RPC.
+	RegistryServiceActiveUsersProcedure = "/api.v1.RegistryService/ActiveUsers"
 	// UserServiceUpdateDetailsProcedure is the fully-qualified name of the UserService's UpdateDetails
 	// RPC.
 	UserServiceUpdateDetailsProcedure = "/api.v1.UserService/UpdateDetails"
@@ -72,6 +77,7 @@ const (
 // AuthServiceClient is a client for the api.v1.AuthService service.
 type AuthServiceClient interface {
 	Join(context.Context, *connect.Request[v1.JoinRequest]) (*connect.Response[v1.JoinResponse], error)
+	Keepalive(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 	Renew(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RenewResponse], error)
 	Leave(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 }
@@ -93,6 +99,12 @@ func NewAuthServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(authServiceMethods.ByName("Join")),
 			connect.WithClientOptions(opts...),
 		),
+		keepalive: connect.NewClient[emptypb.Empty, emptypb.Empty](
+			httpClient,
+			baseURL+AuthServiceKeepaliveProcedure,
+			connect.WithSchema(authServiceMethods.ByName("Keepalive")),
+			connect.WithClientOptions(opts...),
+		),
 		renew: connect.NewClient[emptypb.Empty, v1.RenewResponse](
 			httpClient,
 			baseURL+AuthServiceRenewProcedure,
@@ -110,14 +122,20 @@ func NewAuthServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 
 // authServiceClient implements AuthServiceClient.
 type authServiceClient struct {
-	join  *connect.Client[v1.JoinRequest, v1.JoinResponse]
-	renew *connect.Client[emptypb.Empty, v1.RenewResponse]
-	leave *connect.Client[emptypb.Empty, emptypb.Empty]
+	join      *connect.Client[v1.JoinRequest, v1.JoinResponse]
+	keepalive *connect.Client[emptypb.Empty, emptypb.Empty]
+	renew     *connect.Client[emptypb.Empty, v1.RenewResponse]
+	leave     *connect.Client[emptypb.Empty, emptypb.Empty]
 }
 
 // Join calls api.v1.AuthService.Join.
 func (c *authServiceClient) Join(ctx context.Context, req *connect.Request[v1.JoinRequest]) (*connect.Response[v1.JoinResponse], error) {
 	return c.join.CallUnary(ctx, req)
+}
+
+// Keepalive calls api.v1.AuthService.Keepalive.
+func (c *authServiceClient) Keepalive(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
+	return c.keepalive.CallUnary(ctx, req)
 }
 
 // Renew calls api.v1.AuthService.Renew.
@@ -133,6 +151,7 @@ func (c *authServiceClient) Leave(ctx context.Context, req *connect.Request[empt
 // AuthServiceHandler is an implementation of the api.v1.AuthService service.
 type AuthServiceHandler interface {
 	Join(context.Context, *connect.Request[v1.JoinRequest]) (*connect.Response[v1.JoinResponse], error)
+	Keepalive(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 	Renew(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RenewResponse], error)
 	Leave(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 }
@@ -148,6 +167,12 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 		AuthServiceJoinProcedure,
 		svc.Join,
 		connect.WithSchema(authServiceMethods.ByName("Join")),
+		connect.WithHandlerOptions(opts...),
+	)
+	authServiceKeepaliveHandler := connect.NewUnaryHandler(
+		AuthServiceKeepaliveProcedure,
+		svc.Keepalive,
+		connect.WithSchema(authServiceMethods.ByName("Keepalive")),
 		connect.WithHandlerOptions(opts...),
 	)
 	authServiceRenewHandler := connect.NewUnaryHandler(
@@ -166,6 +191,8 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 		switch r.URL.Path {
 		case AuthServiceJoinProcedure:
 			authServiceJoinHandler.ServeHTTP(w, r)
+		case AuthServiceKeepaliveProcedure:
+			authServiceKeepaliveHandler.ServeHTTP(w, r)
 		case AuthServiceRenewProcedure:
 			authServiceRenewHandler.ServeHTTP(w, r)
 		case AuthServiceLeaveProcedure:
@@ -183,6 +210,10 @@ func (UnimplementedAuthServiceHandler) Join(context.Context, *connect.Request[v1
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.AuthService.Join is not implemented"))
 }
 
+func (UnimplementedAuthServiceHandler) Keepalive(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.AuthService.Keepalive is not implemented"))
+}
+
 func (UnimplementedAuthServiceHandler) Renew(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RenewResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.AuthService.Renew is not implemented"))
 }
@@ -191,14 +222,83 @@ func (UnimplementedAuthServiceHandler) Leave(context.Context, *connect.Request[e
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.AuthService.Leave is not implemented"))
 }
 
+// RegistryServiceClient is a client for the api.v1.RegistryService service.
+type RegistryServiceClient interface {
+	ActiveUsers(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error)
+}
+
+// NewRegistryServiceClient constructs a client for the api.v1.RegistryService service. By default,
+// it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and
+// sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC()
+// or connect.WithGRPCWeb() options.
+//
+// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
+// http://api.acme.com or https://acme.com/grpc).
+func NewRegistryServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) RegistryServiceClient {
+	baseURL = strings.TrimRight(baseURL, "/")
+	registryServiceMethods := v1.File_api_v1_apiv1_proto.Services().ByName("RegistryService").Methods()
+	return &registryServiceClient{
+		activeUsers: connect.NewClient[emptypb.Empty, v1.ActiveUsersResponse](
+			httpClient,
+			baseURL+RegistryServiceActiveUsersProcedure,
+			connect.WithSchema(registryServiceMethods.ByName("ActiveUsers")),
+			connect.WithClientOptions(opts...),
+		),
+	}
+}
+
+// registryServiceClient implements RegistryServiceClient.
+type registryServiceClient struct {
+	activeUsers *connect.Client[emptypb.Empty, v1.ActiveUsersResponse]
+}
+
+// ActiveUsers calls api.v1.RegistryService.ActiveUsers.
+func (c *registryServiceClient) ActiveUsers(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error) {
+	return c.activeUsers.CallUnary(ctx, req)
+}
+
+// RegistryServiceHandler is an implementation of the api.v1.RegistryService service.
+type RegistryServiceHandler interface {
+	ActiveUsers(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error)
+}
+
+// NewRegistryServiceHandler builds an HTTP handler from the service implementation. It returns the
+// path on which to mount the handler and the handler itself.
+//
+// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
+// and JSON codecs. They also support gzip compression.
+func NewRegistryServiceHandler(svc RegistryServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	registryServiceMethods := v1.File_api_v1_apiv1_proto.Services().ByName("RegistryService").Methods()
+	registryServiceActiveUsersHandler := connect.NewUnaryHandler(
+		RegistryServiceActiveUsersProcedure,
+		svc.ActiveUsers,
+		connect.WithSchema(registryServiceMethods.ByName("ActiveUsers")),
+		connect.WithHandlerOptions(opts...),
+	)
+	return "/api.v1.RegistryService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case RegistryServiceActiveUsersProcedure:
+			registryServiceActiveUsersHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+}
+
+// UnimplementedRegistryServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedRegistryServiceHandler struct{}
+
+func (UnimplementedRegistryServiceHandler) ActiveUsers(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.RegistryService.ActiveUsers is not implemented"))
+}
+
 // UserServiceClient is a client for the api.v1.UserService service.
 type UserServiceClient interface {
-	ActiveUsers(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error)
 	UpdateDetails(context.Context, *connect.Request[v1.UpdateDetailsRequest]) (*connect.Response[emptypb.Empty], error)
 	UpdateStatus(context.Context, *connect.Request[v1.UpdateStatusRequest]) (*connect.Response[emptypb.Empty], error)
 	IndicateTyping(context.Context, *connect.Request[v1.IndicateTypingRequest]) (*connect.Response[emptypb.Empty], error)
 	SendChat(context.Context, *connect.Request[v1.SendChatRequest]) (*connect.Response[emptypb.Empty], error)
-	EditChat(context.Context, *connect.Request[v1.ChatEditEvent]) (*connect.Response[emptypb.Empty], error)
+	EditChat(context.Context, *connect.Request[v1.EditChatRequest]) (*connect.Response[emptypb.Empty], error)
 	EmojiReply(context.Context, *connect.Request[v1.EmojiReplyRequest]) (*connect.Response[emptypb.Empty], error)
 }
 
@@ -213,12 +313,6 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 	baseURL = strings.TrimRight(baseURL, "/")
 	userServiceMethods := v1.File_api_v1_apiv1_proto.Services().ByName("UserService").Methods()
 	return &userServiceClient{
-		activeUsers: connect.NewClient[emptypb.Empty, v1.ActiveUsersResponse](
-			httpClient,
-			baseURL+UserServiceActiveUsersProcedure,
-			connect.WithSchema(userServiceMethods.ByName("ActiveUsers")),
-			connect.WithClientOptions(opts...),
-		),
 		updateDetails: connect.NewClient[v1.UpdateDetailsRequest, emptypb.Empty](
 			httpClient,
 			baseURL+UserServiceUpdateDetailsProcedure,
@@ -243,7 +337,7 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("SendChat")),
 			connect.WithClientOptions(opts...),
 		),
-		editChat: connect.NewClient[v1.ChatEditEvent, emptypb.Empty](
+		editChat: connect.NewClient[v1.EditChatRequest, emptypb.Empty](
 			httpClient,
 			baseURL+UserServiceEditChatProcedure,
 			connect.WithSchema(userServiceMethods.ByName("EditChat")),
@@ -260,18 +354,12 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 
 // userServiceClient implements UserServiceClient.
 type userServiceClient struct {
-	activeUsers    *connect.Client[emptypb.Empty, v1.ActiveUsersResponse]
 	updateDetails  *connect.Client[v1.UpdateDetailsRequest, emptypb.Empty]
 	updateStatus   *connect.Client[v1.UpdateStatusRequest, emptypb.Empty]
 	indicateTyping *connect.Client[v1.IndicateTypingRequest, emptypb.Empty]
 	sendChat       *connect.Client[v1.SendChatRequest, emptypb.Empty]
-	editChat       *connect.Client[v1.ChatEditEvent, emptypb.Empty]
+	editChat       *connect.Client[v1.EditChatRequest, emptypb.Empty]
 	emojiReply     *connect.Client[v1.EmojiReplyRequest, emptypb.Empty]
-}
-
-// ActiveUsers calls api.v1.UserService.ActiveUsers.
-func (c *userServiceClient) ActiveUsers(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error) {
-	return c.activeUsers.CallUnary(ctx, req)
 }
 
 // UpdateDetails calls api.v1.UserService.UpdateDetails.
@@ -295,7 +383,7 @@ func (c *userServiceClient) SendChat(ctx context.Context, req *connect.Request[v
 }
 
 // EditChat calls api.v1.UserService.EditChat.
-func (c *userServiceClient) EditChat(ctx context.Context, req *connect.Request[v1.ChatEditEvent]) (*connect.Response[emptypb.Empty], error) {
+func (c *userServiceClient) EditChat(ctx context.Context, req *connect.Request[v1.EditChatRequest]) (*connect.Response[emptypb.Empty], error) {
 	return c.editChat.CallUnary(ctx, req)
 }
 
@@ -306,12 +394,11 @@ func (c *userServiceClient) EmojiReply(ctx context.Context, req *connect.Request
 
 // UserServiceHandler is an implementation of the api.v1.UserService service.
 type UserServiceHandler interface {
-	ActiveUsers(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error)
 	UpdateDetails(context.Context, *connect.Request[v1.UpdateDetailsRequest]) (*connect.Response[emptypb.Empty], error)
 	UpdateStatus(context.Context, *connect.Request[v1.UpdateStatusRequest]) (*connect.Response[emptypb.Empty], error)
 	IndicateTyping(context.Context, *connect.Request[v1.IndicateTypingRequest]) (*connect.Response[emptypb.Empty], error)
 	SendChat(context.Context, *connect.Request[v1.SendChatRequest]) (*connect.Response[emptypb.Empty], error)
-	EditChat(context.Context, *connect.Request[v1.ChatEditEvent]) (*connect.Response[emptypb.Empty], error)
+	EditChat(context.Context, *connect.Request[v1.EditChatRequest]) (*connect.Response[emptypb.Empty], error)
 	EmojiReply(context.Context, *connect.Request[v1.EmojiReplyRequest]) (*connect.Response[emptypb.Empty], error)
 }
 
@@ -322,12 +409,6 @@ type UserServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
 	userServiceMethods := v1.File_api_v1_apiv1_proto.Services().ByName("UserService").Methods()
-	userServiceActiveUsersHandler := connect.NewUnaryHandler(
-		UserServiceActiveUsersProcedure,
-		svc.ActiveUsers,
-		connect.WithSchema(userServiceMethods.ByName("ActiveUsers")),
-		connect.WithHandlerOptions(opts...),
-	)
 	userServiceUpdateDetailsHandler := connect.NewUnaryHandler(
 		UserServiceUpdateDetailsProcedure,
 		svc.UpdateDetails,
@@ -366,8 +447,6 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 	)
 	return "/api.v1.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case UserServiceActiveUsersProcedure:
-			userServiceActiveUsersHandler.ServeHTTP(w, r)
 		case UserServiceUpdateDetailsProcedure:
 			userServiceUpdateDetailsHandler.ServeHTTP(w, r)
 		case UserServiceUpdateStatusProcedure:
@@ -389,10 +468,6 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 // UnimplementedUserServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedUserServiceHandler struct{}
 
-func (UnimplementedUserServiceHandler) ActiveUsers(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.ActiveUsersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.UserService.ActiveUsers is not implemented"))
-}
-
 func (UnimplementedUserServiceHandler) UpdateDetails(context.Context, *connect.Request[v1.UpdateDetailsRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.UserService.UpdateDetails is not implemented"))
 }
@@ -409,7 +484,7 @@ func (UnimplementedUserServiceHandler) SendChat(context.Context, *connect.Reques
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.UserService.SendChat is not implemented"))
 }
 
-func (UnimplementedUserServiceHandler) EditChat(context.Context, *connect.Request[v1.ChatEditEvent]) (*connect.Response[emptypb.Empty], error) {
+func (UnimplementedUserServiceHandler) EditChat(context.Context, *connect.Request[v1.EditChatRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.UserService.EditChat is not implemented"))
 }
 

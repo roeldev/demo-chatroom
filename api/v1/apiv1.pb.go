@@ -330,6 +330,58 @@ func (x *UserMention) GetUserName() string {
 	return ""
 }
 
+type ChatID struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ReceiverId    *UUID                  `protobuf:"bytes,1,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"` // empty = global chatroom
+	ChatId        *UUID                  `protobuf:"bytes,2,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChatID) Reset() {
+	*x = ChatID{}
+	mi := &file_api_v1_apiv1_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChatID) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChatID) ProtoMessage() {}
+
+func (x *ChatID) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_apiv1_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChatID.ProtoReflect.Descriptor instead.
+func (*ChatID) Descriptor() ([]byte, []int) {
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ChatID) GetReceiverId() *UUID {
+	if x != nil {
+		return x.ReceiverId
+	}
+	return nil
+}
+
+func (x *ChatID) GetChatId() *UUID {
+	if x != nil {
+		return x.ChatId
+	}
+	return nil
+}
+
 type JoinRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *UserDetails           `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
@@ -340,7 +392,7 @@ type JoinRequest struct {
 
 func (x *JoinRequest) Reset() {
 	*x = JoinRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[4]
+	mi := &file_api_v1_apiv1_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -352,7 +404,7 @@ func (x *JoinRequest) String() string {
 func (*JoinRequest) ProtoMessage() {}
 
 func (x *JoinRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[4]
+	mi := &file_api_v1_apiv1_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -365,7 +417,7 @@ func (x *JoinRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JoinRequest.ProtoReflect.Descriptor instead.
 func (*JoinRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{4}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *JoinRequest) GetUser() *UserDetails {
@@ -391,7 +443,7 @@ type JoinResponse struct {
 
 func (x *JoinResponse) Reset() {
 	*x = JoinResponse{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[5]
+	mi := &file_api_v1_apiv1_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +455,7 @@ func (x *JoinResponse) String() string {
 func (*JoinResponse) ProtoMessage() {}
 
 func (x *JoinResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[5]
+	mi := &file_api_v1_apiv1_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +468,7 @@ func (x *JoinResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JoinResponse.ProtoReflect.Descriptor instead.
 func (*JoinResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{5}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *JoinResponse) GetToken() string {
@@ -435,7 +487,7 @@ type RenewResponse struct {
 
 func (x *RenewResponse) Reset() {
 	*x = RenewResponse{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[6]
+	mi := &file_api_v1_apiv1_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -447,7 +499,7 @@ func (x *RenewResponse) String() string {
 func (*RenewResponse) ProtoMessage() {}
 
 func (x *RenewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[6]
+	mi := &file_api_v1_apiv1_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -460,7 +512,7 @@ func (x *RenewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenewResponse.ProtoReflect.Descriptor instead.
 func (*RenewResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{6}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *RenewResponse) GetToken() string {
@@ -480,7 +532,7 @@ type ActiveUsersResponse struct {
 
 func (x *ActiveUsersResponse) Reset() {
 	*x = ActiveUsersResponse{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[7]
+	mi := &file_api_v1_apiv1_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -492,7 +544,7 @@ func (x *ActiveUsersResponse) String() string {
 func (*ActiveUsersResponse) ProtoMessage() {}
 
 func (x *ActiveUsersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[7]
+	mi := &file_api_v1_apiv1_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -505,7 +557,7 @@ func (x *ActiveUsersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActiveUsersResponse.ProtoReflect.Descriptor instead.
 func (*ActiveUsersResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{7}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ActiveUsersResponse) GetTime() *timestamppb.Timestamp {
@@ -531,7 +583,7 @@ type UpdateDetailsRequest struct {
 
 func (x *UpdateDetailsRequest) Reset() {
 	*x = UpdateDetailsRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[8]
+	mi := &file_api_v1_apiv1_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -543,7 +595,7 @@ func (x *UpdateDetailsRequest) String() string {
 func (*UpdateDetailsRequest) ProtoMessage() {}
 
 func (x *UpdateDetailsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[8]
+	mi := &file_api_v1_apiv1_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -556,7 +608,7 @@ func (x *UpdateDetailsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDetailsRequest.ProtoReflect.Descriptor instead.
 func (*UpdateDetailsRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{8}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *UpdateDetailsRequest) GetDetails() *UserDetails {
@@ -575,7 +627,7 @@ type UpdateStatusRequest struct {
 
 func (x *UpdateStatusRequest) Reset() {
 	*x = UpdateStatusRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[9]
+	mi := &file_api_v1_apiv1_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -587,7 +639,7 @@ func (x *UpdateStatusRequest) String() string {
 func (*UpdateStatusRequest) ProtoMessage() {}
 
 func (x *UpdateStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[9]
+	mi := &file_api_v1_apiv1_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -600,7 +652,7 @@ func (x *UpdateStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateStatusRequest.ProtoReflect.Descriptor instead.
 func (*UpdateStatusRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{9}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateStatusRequest) GetStatus() UserStatus {
@@ -611,17 +663,16 @@ func (x *UpdateStatusRequest) GetStatus() UserStatus {
 }
 
 type IndicateTypingRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// no receiver = global chatroom
-	ReceiverId    *UUID `protobuf:"bytes,1,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"`
-	Typing        bool  `protobuf:"varint,2,opt,name=typing" json:"typing,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ReceiverId    *UUID                  `protobuf:"bytes,1,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"` // empty = global chatroom
+	Typing        bool                   `protobuf:"varint,2,opt,name=typing" json:"typing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *IndicateTypingRequest) Reset() {
 	*x = IndicateTypingRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[10]
+	mi := &file_api_v1_apiv1_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +684,7 @@ func (x *IndicateTypingRequest) String() string {
 func (*IndicateTypingRequest) ProtoMessage() {}
 
 func (x *IndicateTypingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[10]
+	mi := &file_api_v1_apiv1_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +697,7 @@ func (x *IndicateTypingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IndicateTypingRequest.ProtoReflect.Descriptor instead.
 func (*IndicateTypingRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{10}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *IndicateTypingRequest) GetReceiverId() *UUID {
@@ -664,20 +715,19 @@ func (x *IndicateTypingRequest) GetTyping() bool {
 }
 
 type SendChatRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Time  *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time" json:"time,omitempty"`
-	// no receiver = global chatroom
-	ReceiverId    *UUID          `protobuf:"bytes,2,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"`
-	ReplyChatId   *UUID          `protobuf:"bytes,3,opt,name=reply_chat_id,json=replyChatId" json:"reply_chat_id,omitempty"`
-	Text          string         `protobuf:"bytes,4,opt,name=text" json:"text,omitempty"`
-	Mentions      []*UserMention `protobuf:"bytes,5,rep,name=mentions" json:"mentions,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time" json:"time,omitempty"`
+	ReceiverId    *UUID                  `protobuf:"bytes,2,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"`      // empty = global chatroom
+	ReplyChatId   *UUID                  `protobuf:"bytes,3,opt,name=reply_chat_id,json=replyChatId" json:"reply_chat_id,omitempty"` // empty = no reply = new chat
+	Text          string                 `protobuf:"bytes,4,opt,name=text" json:"text,omitempty"`
+	Mentions      []*UserMention         `protobuf:"bytes,5,rep,name=mentions" json:"mentions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendChatRequest) Reset() {
 	*x = SendChatRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[11]
+	mi := &file_api_v1_apiv1_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -689,7 +739,7 @@ func (x *SendChatRequest) String() string {
 func (*SendChatRequest) ProtoMessage() {}
 
 func (x *SendChatRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[11]
+	mi := &file_api_v1_apiv1_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -702,7 +752,7 @@ func (x *SendChatRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendChatRequest.ProtoReflect.Descriptor instead.
 func (*SendChatRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{11}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *SendChatRequest) GetTime() *timestamppb.Timestamp {
@@ -743,7 +793,7 @@ func (x *SendChatRequest) GetMentions() []*UserMention {
 type EditChatRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time" json:"time,omitempty"`
-	ChatId        *UUID                  `protobuf:"bytes,2,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"`
+	Chat          *ChatID                `protobuf:"bytes,2,opt,name=chat" json:"chat,omitempty"`
 	Text          string                 `protobuf:"bytes,3,opt,name=text" json:"text,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -751,7 +801,7 @@ type EditChatRequest struct {
 
 func (x *EditChatRequest) Reset() {
 	*x = EditChatRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[12]
+	mi := &file_api_v1_apiv1_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -763,7 +813,7 @@ func (x *EditChatRequest) String() string {
 func (*EditChatRequest) ProtoMessage() {}
 
 func (x *EditChatRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[12]
+	mi := &file_api_v1_apiv1_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -776,7 +826,7 @@ func (x *EditChatRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditChatRequest.ProtoReflect.Descriptor instead.
 func (*EditChatRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{12}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *EditChatRequest) GetTime() *timestamppb.Timestamp {
@@ -786,9 +836,9 @@ func (x *EditChatRequest) GetTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *EditChatRequest) GetChatId() *UUID {
+func (x *EditChatRequest) GetChat() *ChatID {
 	if x != nil {
-		return x.ChatId
+		return x.Chat
 	}
 	return nil
 }
@@ -803,15 +853,16 @@ func (x *EditChatRequest) GetText() string {
 type EmojiReplyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time" json:"time,omitempty"`
-	ReplyChatId   *UUID                  `protobuf:"bytes,3,opt,name=reply_chat_id,json=replyChatId" json:"reply_chat_id,omitempty"`
-	Emoji         []byte                 `protobuf:"bytes,4,opt,name=emoji" json:"emoji,omitempty"`
+	Chat          *ChatID                `protobuf:"bytes,2,opt,name=chat" json:"chat,omitempty"`
+	Emoji         []byte                 `protobuf:"bytes,3,opt,name=emoji" json:"emoji,omitempty"`
+	Add           bool                   `protobuf:"varint,4,opt,name=add" json:"add,omitempty"` // true = add, false = remove
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EmojiReplyRequest) Reset() {
 	*x = EmojiReplyRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[13]
+	mi := &file_api_v1_apiv1_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -823,7 +874,7 @@ func (x *EmojiReplyRequest) String() string {
 func (*EmojiReplyRequest) ProtoMessage() {}
 
 func (x *EmojiReplyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[13]
+	mi := &file_api_v1_apiv1_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -836,7 +887,7 @@ func (x *EmojiReplyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EmojiReplyRequest.ProtoReflect.Descriptor instead.
 func (*EmojiReplyRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{13}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *EmojiReplyRequest) GetTime() *timestamppb.Timestamp {
@@ -846,9 +897,9 @@ func (x *EmojiReplyRequest) GetTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *EmojiReplyRequest) GetReplyChatId() *UUID {
+func (x *EmojiReplyRequest) GetChat() *ChatID {
 	if x != nil {
-		return x.ReplyChatId
+		return x.Chat
 	}
 	return nil
 }
@@ -858,6 +909,13 @@ func (x *EmojiReplyRequest) GetEmoji() []byte {
 		return x.Emoji
 	}
 	return nil
+}
+
+func (x *EmojiReplyRequest) GetAdd() bool {
+	if x != nil {
+		return x.Add
+	}
+	return false
 }
 
 type EventUser struct {
@@ -870,7 +928,7 @@ type EventUser struct {
 
 func (x *EventUser) Reset() {
 	*x = EventUser{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[14]
+	mi := &file_api_v1_apiv1_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -882,7 +940,7 @@ func (x *EventUser) String() string {
 func (*EventUser) ProtoMessage() {}
 
 func (x *EventUser) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[14]
+	mi := &file_api_v1_apiv1_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -895,7 +953,7 @@ func (x *EventUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventUser.ProtoReflect.Descriptor instead.
 func (*EventUser) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{14}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *EventUser) GetId() *UUID {
@@ -922,7 +980,7 @@ type PreviousEventsRequest struct {
 
 func (x *PreviousEventsRequest) Reset() {
 	*x = PreviousEventsRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[15]
+	mi := &file_api_v1_apiv1_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -934,7 +992,7 @@ func (x *PreviousEventsRequest) String() string {
 func (*PreviousEventsRequest) ProtoMessage() {}
 
 func (x *PreviousEventsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[15]
+	mi := &file_api_v1_apiv1_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -947,7 +1005,7 @@ func (x *PreviousEventsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreviousEventsRequest.ProtoReflect.Descriptor instead.
 func (*PreviousEventsRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{15}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *PreviousEventsRequest) GetUntilTime() *timestamppb.Timestamp {
@@ -973,7 +1031,7 @@ type PreviousEventsResponse struct {
 
 func (x *PreviousEventsResponse) Reset() {
 	*x = PreviousEventsResponse{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[16]
+	mi := &file_api_v1_apiv1_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -985,7 +1043,7 @@ func (x *PreviousEventsResponse) String() string {
 func (*PreviousEventsResponse) ProtoMessage() {}
 
 func (x *PreviousEventsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[16]
+	mi := &file_api_v1_apiv1_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -998,7 +1056,7 @@ func (x *PreviousEventsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreviousEventsResponse.ProtoReflect.Descriptor instead.
 func (*PreviousEventsResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{16}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *PreviousEventsResponse) GetHistory() []*PreviousEventsResponse_PreviousEvent {
@@ -1021,7 +1079,7 @@ type EventStreamRequest struct {
 
 func (x *EventStreamRequest) Reset() {
 	*x = EventStreamRequest{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[17]
+	mi := &file_api_v1_apiv1_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1033,7 +1091,7 @@ func (x *EventStreamRequest) String() string {
 func (*EventStreamRequest) ProtoMessage() {}
 
 func (x *EventStreamRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[17]
+	mi := &file_api_v1_apiv1_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1046,7 +1104,7 @@ func (x *EventStreamRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventStreamRequest.ProtoReflect.Descriptor instead.
 func (*EventStreamRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{17}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *EventStreamRequest) GetStream() isEventStreamRequest_Stream {
@@ -1103,7 +1161,6 @@ type EventStreamResponse struct {
 	//	*EventStreamResponse_ChatSent
 	//	*EventStreamResponse_ChatEdit
 	//	*EventStreamResponse_EmojiReply
-	//	*EventStreamResponse_EmojiRemove
 	Event         isEventStreamResponse_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1111,7 +1168,7 @@ type EventStreamResponse struct {
 
 func (x *EventStreamResponse) Reset() {
 	*x = EventStreamResponse{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[18]
+	mi := &file_api_v1_apiv1_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1123,7 +1180,7 @@ func (x *EventStreamResponse) String() string {
 func (*EventStreamResponse) ProtoMessage() {}
 
 func (x *EventStreamResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[18]
+	mi := &file_api_v1_apiv1_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1136,7 +1193,7 @@ func (x *EventStreamResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventStreamResponse.ProtoReflect.Descriptor instead.
 func (*EventStreamResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{18}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *EventStreamResponse) GetTime() *timestamppb.Timestamp {
@@ -1225,15 +1282,6 @@ func (x *EventStreamResponse) GetEmojiReply() *EmojiReplyEvent {
 	return nil
 }
 
-func (x *EventStreamResponse) GetEmojiRemove() *EmojiRemoveEvent {
-	if x != nil {
-		if x, ok := x.Event.(*EventStreamResponse_EmojiRemove); ok {
-			return x.EmojiRemove
-		}
-	}
-	return nil
-}
-
 type isEventStreamResponse_Event interface {
 	isEventStreamResponse_Event()
 }
@@ -1270,10 +1318,6 @@ type EventStreamResponse_EmojiReply struct {
 	EmojiReply *EmojiReplyEvent `protobuf:"bytes,22,opt,name=emoji_reply,json=emojiReply,oneof"`
 }
 
-type EventStreamResponse_EmojiRemove struct {
-	EmojiRemove *EmojiRemoveEvent `protobuf:"bytes,23,opt,name=emoji_remove,json=emojiRemove,oneof"`
-}
-
 func (*EventStreamResponse_UserJoin) isEventStreamResponse_Event() {}
 
 func (*EventStreamResponse_UserLeave) isEventStreamResponse_Event() {}
@@ -1290,8 +1334,6 @@ func (*EventStreamResponse_ChatEdit) isEventStreamResponse_Event() {}
 
 func (*EventStreamResponse_EmojiReply) isEventStreamResponse_Event() {}
 
-func (*EventStreamResponse_EmojiRemove) isEventStreamResponse_Event() {}
-
 // User joins
 type UserJoinEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1303,7 +1345,7 @@ type UserJoinEvent struct {
 
 func (x *UserJoinEvent) Reset() {
 	*x = UserJoinEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[19]
+	mi := &file_api_v1_apiv1_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1315,7 +1357,7 @@ func (x *UserJoinEvent) String() string {
 func (*UserJoinEvent) ProtoMessage() {}
 
 func (x *UserJoinEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[19]
+	mi := &file_api_v1_apiv1_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1328,7 +1370,7 @@ func (x *UserJoinEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserJoinEvent.ProtoReflect.Descriptor instead.
 func (*UserJoinEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{19}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *UserJoinEvent) GetUser() *EventUser {
@@ -1355,7 +1397,7 @@ type UserLeaveEvent struct {
 
 func (x *UserLeaveEvent) Reset() {
 	*x = UserLeaveEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[20]
+	mi := &file_api_v1_apiv1_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1367,7 +1409,7 @@ func (x *UserLeaveEvent) String() string {
 func (*UserLeaveEvent) ProtoMessage() {}
 
 func (x *UserLeaveEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[20]
+	mi := &file_api_v1_apiv1_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1380,7 +1422,7 @@ func (x *UserLeaveEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserLeaveEvent.ProtoReflect.Descriptor instead.
 func (*UserLeaveEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{20}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *UserLeaveEvent) GetUser() *EventUser {
@@ -1401,7 +1443,7 @@ type UserUpdateEvent struct {
 
 func (x *UserUpdateEvent) Reset() {
 	*x = UserUpdateEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[21]
+	mi := &file_api_v1_apiv1_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1413,7 +1455,7 @@ func (x *UserUpdateEvent) String() string {
 func (*UserUpdateEvent) ProtoMessage() {}
 
 func (x *UserUpdateEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[21]
+	mi := &file_api_v1_apiv1_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1426,7 +1468,7 @@ func (x *UserUpdateEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserUpdateEvent.ProtoReflect.Descriptor instead.
 func (*UserUpdateEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{21}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *UserUpdateEvent) GetUser() *EventUser {
@@ -1455,7 +1497,7 @@ type UserStatusEvent struct {
 
 func (x *UserStatusEvent) Reset() {
 	*x = UserStatusEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[22]
+	mi := &file_api_v1_apiv1_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1467,7 +1509,7 @@ func (x *UserStatusEvent) String() string {
 func (*UserStatusEvent) ProtoMessage() {}
 
 func (x *UserStatusEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[22]
+	mi := &file_api_v1_apiv1_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1480,7 +1522,7 @@ func (x *UserStatusEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserStatusEvent.ProtoReflect.Descriptor instead.
 func (*UserStatusEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{22}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *UserStatusEvent) GetUser() *EventUser {
@@ -1506,18 +1548,17 @@ func (x *UserStatusEvent) GetBefore() UserStatus {
 
 // User is typing a message
 type UserTypingEvent struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	User  *EventUser             `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
-	// receiver user's UUID, or global chatroom on empty
-	ReceiverId    *UUID `protobuf:"bytes,2,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"`
-	Typing        bool  `protobuf:"varint,3,opt,name=typing" json:"typing,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *EventUser             `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	ReceiverId    *UUID                  `protobuf:"bytes,2,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"` // empty = global chatroom
+	Typing        bool                   `protobuf:"varint,3,opt,name=typing" json:"typing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UserTypingEvent) Reset() {
 	*x = UserTypingEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[23]
+	mi := &file_api_v1_apiv1_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1529,7 +1570,7 @@ func (x *UserTypingEvent) String() string {
 func (*UserTypingEvent) ProtoMessage() {}
 
 func (x *UserTypingEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[23]
+	mi := &file_api_v1_apiv1_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1542,7 +1583,7 @@ func (x *UserTypingEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserTypingEvent.ProtoReflect.Descriptor instead.
 func (*UserTypingEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{23}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *UserTypingEvent) GetUser() *EventUser {
@@ -1568,10 +1609,9 @@ func (x *UserTypingEvent) GetTyping() bool {
 
 // User sends chat message
 type ChatSentEvent struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	ChatId *UUID                  `protobuf:"bytes,1,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"` // id of this chat
-	User   *EventUser             `protobuf:"bytes,2,opt,name=user" json:"user,omitempty"`
-	// receiver user's UUID, or global chatroom on empty
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	ChatId        *UUID                       `protobuf:"bytes,1,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"` // id of this chat
+	User          *EventUser                  `protobuf:"bytes,2,opt,name=user" json:"user,omitempty"`
 	ReceiverId    *UUID                       `protobuf:"bytes,3,opt,name=receiver_id,json=receiverId" json:"receiver_id,omitempty"`
 	ReplyChatId   *UUID                       `protobuf:"bytes,4,opt,name=reply_chat_id,json=replyChatId" json:"reply_chat_id,omitempty"`
 	Text          string                      `protobuf:"bytes,5,opt,name=text" json:"text,omitempty"`
@@ -1584,7 +1624,7 @@ type ChatSentEvent struct {
 
 func (x *ChatSentEvent) Reset() {
 	*x = ChatSentEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[24]
+	mi := &file_api_v1_apiv1_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1596,7 +1636,7 @@ func (x *ChatSentEvent) String() string {
 func (*ChatSentEvent) ProtoMessage() {}
 
 func (x *ChatSentEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[24]
+	mi := &file_api_v1_apiv1_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1609,7 +1649,7 @@ func (x *ChatSentEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatSentEvent.ProtoReflect.Descriptor instead.
 func (*ChatSentEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{24}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *ChatSentEvent) GetChatId() *UUID {
@@ -1670,15 +1710,16 @@ func (x *ChatSentEvent) GetEmojis() []*ChatSentEvent_EmojiReply {
 
 type ChatEditEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChatId        *UUID                  `protobuf:"bytes,1,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"`
-	Text          string                 `protobuf:"bytes,2,opt,name=text" json:"text,omitempty"`
+	User          *EventUser             `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	Chat          *ChatID                `protobuf:"bytes,2,opt,name=chat" json:"chat,omitempty"`
+	Text          string                 `protobuf:"bytes,3,opt,name=text" json:"text,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ChatEditEvent) Reset() {
 	*x = ChatEditEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[25]
+	mi := &file_api_v1_apiv1_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1690,7 +1731,7 @@ func (x *ChatEditEvent) String() string {
 func (*ChatEditEvent) ProtoMessage() {}
 
 func (x *ChatEditEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[25]
+	mi := &file_api_v1_apiv1_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1703,12 +1744,19 @@ func (x *ChatEditEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatEditEvent.ProtoReflect.Descriptor instead.
 func (*ChatEditEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{25}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *ChatEditEvent) GetChatId() *UUID {
+func (x *ChatEditEvent) GetUser() *EventUser {
 	if x != nil {
-		return x.ChatId
+		return x.User
+	}
+	return nil
+}
+
+func (x *ChatEditEvent) GetChat() *ChatID {
+	if x != nil {
+		return x.Chat
 	}
 	return nil
 }
@@ -1722,15 +1770,17 @@ func (x *ChatEditEvent) GetText() string {
 
 type EmojiReplyEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChatId        *UUID                  `protobuf:"bytes,1,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"`
-	Emoji         []byte                 `protobuf:"bytes,2,opt,name=emoji" json:"emoji,omitempty"`
+	User          *EventUser             `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	Chat          *ChatID                `protobuf:"bytes,2,opt,name=chat" json:"chat,omitempty"`
+	Emoji         []byte                 `protobuf:"bytes,3,opt,name=emoji" json:"emoji,omitempty"`
+	Add           bool                   `protobuf:"varint,4,opt,name=add" json:"add,omitempty"` // true = add, false = remove
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EmojiReplyEvent) Reset() {
 	*x = EmojiReplyEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[26]
+	mi := &file_api_v1_apiv1_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1742,7 +1792,7 @@ func (x *EmojiReplyEvent) String() string {
 func (*EmojiReplyEvent) ProtoMessage() {}
 
 func (x *EmojiReplyEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[26]
+	mi := &file_api_v1_apiv1_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1755,12 +1805,19 @@ func (x *EmojiReplyEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EmojiReplyEvent.ProtoReflect.Descriptor instead.
 func (*EmojiReplyEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{26}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *EmojiReplyEvent) GetChatId() *UUID {
+func (x *EmojiReplyEvent) GetUser() *EventUser {
 	if x != nil {
-		return x.ChatId
+		return x.User
+	}
+	return nil
+}
+
+func (x *EmojiReplyEvent) GetChat() *ChatID {
+	if x != nil {
+		return x.Chat
 	}
 	return nil
 }
@@ -1772,56 +1829,11 @@ func (x *EmojiReplyEvent) GetEmoji() []byte {
 	return nil
 }
 
-type EmojiRemoveEvent struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChatId        *UUID                  `protobuf:"bytes,1,opt,name=chat_id,json=chatId" json:"chat_id,omitempty"`
-	Emoji         []byte                 `protobuf:"bytes,2,opt,name=emoji" json:"emoji,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *EmojiRemoveEvent) Reset() {
-	*x = EmojiRemoveEvent{}
-	mi := &file_api_v1_apiv1_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EmojiRemoveEvent) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EmojiRemoveEvent) ProtoMessage() {}
-
-func (x *EmojiRemoveEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_apiv1_proto_msgTypes[27]
+func (x *EmojiReplyEvent) GetAdd() bool {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+		return x.Add
 	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use EmojiRemoveEvent.ProtoReflect.Descriptor instead.
-func (*EmojiRemoveEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *EmojiRemoveEvent) GetChatId() *UUID {
-	if x != nil {
-		return x.ChatId
-	}
-	return nil
-}
-
-func (x *EmojiRemoveEvent) GetEmoji() []byte {
-	if x != nil {
-		return x.Emoji
-	}
-	return nil
+	return false
 }
 
 type ActiveUsersResponse_User struct {
@@ -1861,7 +1873,7 @@ func (x *ActiveUsersResponse_User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActiveUsersResponse_User.ProtoReflect.Descriptor instead.
 func (*ActiveUsersResponse_User) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{7, 0}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{8, 0}
 }
 
 func (x *ActiveUsersResponse_User) GetId() *UUID {
@@ -1933,7 +1945,7 @@ func (x *PreviousEventsResponse_PreviousEvent) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use PreviousEventsResponse_PreviousEvent.ProtoReflect.Descriptor instead.
 func (*PreviousEventsResponse_PreviousEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{16, 0}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{17, 0}
 }
 
 func (x *PreviousEventsResponse_PreviousEvent) GetTime() *timestamppb.Timestamp {
@@ -2053,7 +2065,7 @@ func (x *ChatSentEvent_Edit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatSentEvent_Edit.ProtoReflect.Descriptor instead.
 func (*ChatSentEvent_Edit) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{24, 0}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{25, 0}
 }
 
 func (x *ChatSentEvent_Edit) GetTime() *timestamppb.Timestamp {
@@ -2106,7 +2118,7 @@ func (x *ChatSentEvent_EmojiReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatSentEvent_EmojiReply.ProtoReflect.Descriptor instead.
 func (*ChatSentEvent_EmojiReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{24, 1}
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{25, 1}
 }
 
 func (x *ChatSentEvent_EmojiReply) GetTime() *timestamppb.Timestamp {
@@ -2147,6 +2159,10 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\vUserMention\x12%\n" +
 	"\auser_id\x18\x01 \x01(\v2\f.api.v1.UUIDR\x06userId\x12\x1b\n" +
 	"\tuser_name\x18\x02 \x01(\tR\buserName\"^\n" +
+	"\x06ChatID\x12-\n" +
+	"\vreceiver_id\x18\x01 \x01(\v2\f.api.v1.UUIDR\n" +
+	"receiverId\x12%\n" +
+	"\achat_id\x18\x02 \x01(\v2\f.api.v1.UUIDR\x06chatId\"^\n" +
 	"\vJoinRequest\x12'\n" +
 	"\x04user\x18\x01 \x01(\v2\x13.api.v1.UserDetailsR\x04user\x12&\n" +
 	"\x05flags\x18\x02 \x01(\x0e2\x10.api.v1.UserFlagR\x05flags\"$\n" +
@@ -2176,15 +2192,16 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"receiverId\x120\n" +
 	"\rreply_chat_id\x18\x03 \x01(\v2\f.api.v1.UUIDR\vreplyChatId\x12\x12\n" +
 	"\x04text\x18\x04 \x01(\tR\x04text\x12/\n" +
-	"\bmentions\x18\x05 \x03(\v2\x13.api.v1.UserMentionR\bmentions\"|\n" +
+	"\bmentions\x18\x05 \x03(\v2\x13.api.v1.UserMentionR\bmentions\"y\n" +
 	"\x0fEditChatRequest\x12.\n" +
-	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12%\n" +
-	"\achat_id\x18\x02 \x01(\v2\f.api.v1.UUIDR\x06chatId\x12\x12\n" +
-	"\x04text\x18\x03 \x01(\tR\x04text\"\x8b\x01\n" +
+	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\"\n" +
+	"\x04chat\x18\x02 \x01(\v2\x0e.api.v1.ChatIDR\x04chat\x12\x12\n" +
+	"\x04text\x18\x03 \x01(\tR\x04text\"\x8f\x01\n" +
 	"\x11EmojiReplyRequest\x12.\n" +
-	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x120\n" +
-	"\rreply_chat_id\x18\x03 \x01(\v2\f.api.v1.UUIDR\vreplyChatId\x12\x14\n" +
-	"\x05emoji\x18\x04 \x01(\fR\x05emoji\"X\n" +
+	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\"\n" +
+	"\x04chat\x18\x02 \x01(\v2\x0e.api.v1.ChatIDR\x04chat\x12\x14\n" +
+	"\x05emoji\x18\x03 \x01(\fR\x05emoji\x12\x10\n" +
+	"\x03add\x18\x04 \x01(\bR\x03add\"X\n" +
 	"\tEventUser\x12\x1c\n" +
 	"\x02id\x18\x01 \x01(\v2\f.api.v1.UUIDR\x02id\x12-\n" +
 	"\adetails\x18\x02 \x01(\v2\x13.api.v1.UserDetailsR\adetails\"h\n" +
@@ -2207,7 +2224,7 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\x12EventStreamRequest\x12\x16\n" +
 	"\x05start\x18\x01 \x01(\tH\x00R\x05start\x12\x12\n" +
 	"\x03ack\x18\x02 \x01(\tH\x00R\x03ackB\b\n" +
-	"\x06stream\"\xd8\x04\n" +
+	"\x06stream\"\x99\x04\n" +
 	"\x13EventStreamResponse\x12.\n" +
 	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x124\n" +
 	"\tuser_join\x18\n" +
@@ -2223,8 +2240,7 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\tchat_sent\x18\x14 \x01(\v2\x15.api.v1.ChatSentEventH\x00R\bchatSent\x124\n" +
 	"\tchat_edit\x18\x15 \x01(\v2\x15.api.v1.ChatEditEventH\x00R\bchatEdit\x12:\n" +
 	"\vemoji_reply\x18\x16 \x01(\v2\x17.api.v1.EmojiReplyEventH\x00R\n" +
-	"emojiReply\x12=\n" +
-	"\femoji_remove\x18\x17 \x01(\v2\x18.api.v1.EmojiRemoveEventH\x00R\vemojiRemoveB\a\n" +
+	"emojiReplyB\a\n" +
 	"\x05event\"^\n" +
 	"\rUserJoinEvent\x12%\n" +
 	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12&\n" +
@@ -2260,16 +2276,16 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"EmojiReply\x12.\n" +
 	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12%\n" +
 	"\x04user\x18\x02 \x01(\v2\x11.api.v1.EventUserR\x04user\x12\x14\n" +
-	"\x05emoji\x18\x03 \x01(\fR\x05emoji\"J\n" +
+	"\x05emoji\x18\x03 \x01(\fR\x05emoji\"n\n" +
 	"\rChatEditEvent\x12%\n" +
-	"\achat_id\x18\x01 \x01(\v2\f.api.v1.UUIDR\x06chatId\x12\x12\n" +
-	"\x04text\x18\x02 \x01(\tR\x04text\"N\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12\"\n" +
+	"\x04chat\x18\x02 \x01(\v2\x0e.api.v1.ChatIDR\x04chat\x12\x12\n" +
+	"\x04text\x18\x03 \x01(\tR\x04text\"\x84\x01\n" +
 	"\x0fEmojiReplyEvent\x12%\n" +
-	"\achat_id\x18\x01 \x01(\v2\f.api.v1.UUIDR\x06chatId\x12\x14\n" +
-	"\x05emoji\x18\x02 \x01(\fR\x05emoji\"O\n" +
-	"\x10EmojiRemoveEvent\x12%\n" +
-	"\achat_id\x18\x01 \x01(\v2\f.api.v1.UUIDR\x06chatId\x12\x14\n" +
-	"\x05emoji\x18\x02 \x01(\fR\x05emoji*Q\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12\"\n" +
+	"\x04chat\x18\x02 \x01(\v2\x0e.api.v1.ChatIDR\x04chat\x12\x14\n" +
+	"\x05emoji\x18\x03 \x01(\fR\x05emoji\x12\x10\n" +
+	"\x03add\x18\x04 \x01(\bR\x03add*Q\n" +
 	"\n" +
 	"UserStatus\x12\x17\n" +
 	"\x13USER_STATUS_DEFAULT\x10\x00\x12\x14\n" +
@@ -2277,18 +2293,20 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\x10USER_STATUS_AWAY\x10\x02*4\n" +
 	"\bUserFlag\x12\x12\n" +
 	"\x0eUSER_FLAG_NONE\x10\x00\x12\x14\n" +
-	"\x10USER_FLAG_IS_BOT\x10\x012\xb7\x01\n" +
+	"\x10USER_FLAG_IS_BOT\x10\x012\xf6\x01\n" +
 	"\vAuthService\x123\n" +
-	"\x04Join\x12\x13.api.v1.JoinRequest\x1a\x14.api.v1.JoinResponse\"\x00\x128\n" +
+	"\x04Join\x12\x13.api.v1.JoinRequest\x1a\x14.api.v1.JoinResponse\"\x00\x12=\n" +
+	"\tKeepalive\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00\x128\n" +
 	"\x05Renew\x12\x16.google.protobuf.Empty\x1a\x15.api.v1.RenewResponse\"\x00\x129\n" +
-	"\x05Leave\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x002\xed\x03\n" +
-	"\vUserService\x12D\n" +
-	"\vActiveUsers\x12\x16.google.protobuf.Empty\x1a\x1b.api.v1.ActiveUsersResponse\"\x00\x12G\n" +
+	"\x05Leave\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x002W\n" +
+	"\x0fRegistryService\x12D\n" +
+	"\vActiveUsers\x12\x16.google.protobuf.Empty\x1a\x1b.api.v1.ActiveUsersResponse\"\x002\xa9\x03\n" +
+	"\vUserService\x12G\n" +
 	"\rUpdateDetails\x12\x1c.api.v1.UpdateDetailsRequest\x1a\x16.google.protobuf.Empty\"\x00\x12E\n" +
 	"\fUpdateStatus\x12\x1b.api.v1.UpdateStatusRequest\x1a\x16.google.protobuf.Empty\"\x00\x12I\n" +
 	"\x0eIndicateTyping\x12\x1d.api.v1.IndicateTypingRequest\x1a\x16.google.protobuf.Empty\"\x00\x12=\n" +
-	"\bSendChat\x12\x17.api.v1.SendChatRequest\x1a\x16.google.protobuf.Empty\"\x00\x12;\n" +
-	"\bEditChat\x12\x15.api.v1.ChatEditEvent\x1a\x16.google.protobuf.Empty\"\x00\x12A\n" +
+	"\bSendChat\x12\x17.api.v1.SendChatRequest\x1a\x16.google.protobuf.Empty\"\x00\x12=\n" +
+	"\bEditChat\x12\x17.api.v1.EditChatRequest\x1a\x16.google.protobuf.Empty\"\x00\x12A\n" +
 	"\n" +
 	"EmojiReply\x12\x19.api.v1.EmojiReplyRequest\x1a\x16.google.protobuf.Empty\"\x002\xaa\x01\n" +
 	"\rEventsService\x12Q\n" +
@@ -2316,30 +2334,30 @@ var file_api_v1_apiv1_proto_goTypes = []any{
 	(*Color)(nil),                                // 3: api.v1.Color
 	(*UserDetails)(nil),                          // 4: api.v1.UserDetails
 	(*UserMention)(nil),                          // 5: api.v1.UserMention
-	(*JoinRequest)(nil),                          // 6: api.v1.JoinRequest
-	(*JoinResponse)(nil),                         // 7: api.v1.JoinResponse
-	(*RenewResponse)(nil),                        // 8: api.v1.RenewResponse
-	(*ActiveUsersResponse)(nil),                  // 9: api.v1.ActiveUsersResponse
-	(*UpdateDetailsRequest)(nil),                 // 10: api.v1.UpdateDetailsRequest
-	(*UpdateStatusRequest)(nil),                  // 11: api.v1.UpdateStatusRequest
-	(*IndicateTypingRequest)(nil),                // 12: api.v1.IndicateTypingRequest
-	(*SendChatRequest)(nil),                      // 13: api.v1.SendChatRequest
-	(*EditChatRequest)(nil),                      // 14: api.v1.EditChatRequest
-	(*EmojiReplyRequest)(nil),                    // 15: api.v1.EmojiReplyRequest
-	(*EventUser)(nil),                            // 16: api.v1.EventUser
-	(*PreviousEventsRequest)(nil),                // 17: api.v1.PreviousEventsRequest
-	(*PreviousEventsResponse)(nil),               // 18: api.v1.PreviousEventsResponse
-	(*EventStreamRequest)(nil),                   // 19: api.v1.EventStreamRequest
-	(*EventStreamResponse)(nil),                  // 20: api.v1.EventStreamResponse
-	(*UserJoinEvent)(nil),                        // 21: api.v1.UserJoinEvent
-	(*UserLeaveEvent)(nil),                       // 22: api.v1.UserLeaveEvent
-	(*UserUpdateEvent)(nil),                      // 23: api.v1.UserUpdateEvent
-	(*UserStatusEvent)(nil),                      // 24: api.v1.UserStatusEvent
-	(*UserTypingEvent)(nil),                      // 25: api.v1.UserTypingEvent
-	(*ChatSentEvent)(nil),                        // 26: api.v1.ChatSentEvent
-	(*ChatEditEvent)(nil),                        // 27: api.v1.ChatEditEvent
-	(*EmojiReplyEvent)(nil),                      // 28: api.v1.EmojiReplyEvent
-	(*EmojiRemoveEvent)(nil),                     // 29: api.v1.EmojiRemoveEvent
+	(*ChatID)(nil),                               // 6: api.v1.ChatID
+	(*JoinRequest)(nil),                          // 7: api.v1.JoinRequest
+	(*JoinResponse)(nil),                         // 8: api.v1.JoinResponse
+	(*RenewResponse)(nil),                        // 9: api.v1.RenewResponse
+	(*ActiveUsersResponse)(nil),                  // 10: api.v1.ActiveUsersResponse
+	(*UpdateDetailsRequest)(nil),                 // 11: api.v1.UpdateDetailsRequest
+	(*UpdateStatusRequest)(nil),                  // 12: api.v1.UpdateStatusRequest
+	(*IndicateTypingRequest)(nil),                // 13: api.v1.IndicateTypingRequest
+	(*SendChatRequest)(nil),                      // 14: api.v1.SendChatRequest
+	(*EditChatRequest)(nil),                      // 15: api.v1.EditChatRequest
+	(*EmojiReplyRequest)(nil),                    // 16: api.v1.EmojiReplyRequest
+	(*EventUser)(nil),                            // 17: api.v1.EventUser
+	(*PreviousEventsRequest)(nil),                // 18: api.v1.PreviousEventsRequest
+	(*PreviousEventsResponse)(nil),               // 19: api.v1.PreviousEventsResponse
+	(*EventStreamRequest)(nil),                   // 20: api.v1.EventStreamRequest
+	(*EventStreamResponse)(nil),                  // 21: api.v1.EventStreamResponse
+	(*UserJoinEvent)(nil),                        // 22: api.v1.UserJoinEvent
+	(*UserLeaveEvent)(nil),                       // 23: api.v1.UserLeaveEvent
+	(*UserUpdateEvent)(nil),                      // 24: api.v1.UserUpdateEvent
+	(*UserStatusEvent)(nil),                      // 25: api.v1.UserStatusEvent
+	(*UserTypingEvent)(nil),                      // 26: api.v1.UserTypingEvent
+	(*ChatSentEvent)(nil),                        // 27: api.v1.ChatSentEvent
+	(*ChatEditEvent)(nil),                        // 28: api.v1.ChatEditEvent
+	(*EmojiReplyEvent)(nil),                      // 29: api.v1.EmojiReplyEvent
 	(*ActiveUsersResponse_User)(nil),             // 30: api.v1.ActiveUsersResponse.User
 	(*PreviousEventsResponse_PreviousEvent)(nil), // 31: api.v1.PreviousEventsResponse.PreviousEvent
 	(*ChatSentEvent_Edit)(nil),                   // 32: api.v1.ChatSentEvent.Edit
@@ -2351,96 +2369,100 @@ var file_api_v1_apiv1_proto_depIdxs = []int32{
 	3,  // 0: api.v1.UserDetails.color1:type_name -> api.v1.Color
 	3,  // 1: api.v1.UserDetails.color2:type_name -> api.v1.Color
 	2,  // 2: api.v1.UserMention.user_id:type_name -> api.v1.UUID
-	4,  // 3: api.v1.JoinRequest.user:type_name -> api.v1.UserDetails
-	1,  // 4: api.v1.JoinRequest.flags:type_name -> api.v1.UserFlag
-	34, // 5: api.v1.ActiveUsersResponse.time:type_name -> google.protobuf.Timestamp
-	30, // 6: api.v1.ActiveUsersResponse.users:type_name -> api.v1.ActiveUsersResponse.User
-	4,  // 7: api.v1.UpdateDetailsRequest.details:type_name -> api.v1.UserDetails
-	0,  // 8: api.v1.UpdateStatusRequest.status:type_name -> api.v1.UserStatus
-	2,  // 9: api.v1.IndicateTypingRequest.receiver_id:type_name -> api.v1.UUID
-	34, // 10: api.v1.SendChatRequest.time:type_name -> google.protobuf.Timestamp
-	2,  // 11: api.v1.SendChatRequest.receiver_id:type_name -> api.v1.UUID
-	2,  // 12: api.v1.SendChatRequest.reply_chat_id:type_name -> api.v1.UUID
-	5,  // 13: api.v1.SendChatRequest.mentions:type_name -> api.v1.UserMention
-	34, // 14: api.v1.EditChatRequest.time:type_name -> google.protobuf.Timestamp
-	2,  // 15: api.v1.EditChatRequest.chat_id:type_name -> api.v1.UUID
-	34, // 16: api.v1.EmojiReplyRequest.time:type_name -> google.protobuf.Timestamp
-	2,  // 17: api.v1.EmojiReplyRequest.reply_chat_id:type_name -> api.v1.UUID
-	2,  // 18: api.v1.EventUser.id:type_name -> api.v1.UUID
-	4,  // 19: api.v1.EventUser.details:type_name -> api.v1.UserDetails
-	34, // 20: api.v1.PreviousEventsRequest.until_time:type_name -> google.protobuf.Timestamp
-	31, // 21: api.v1.PreviousEventsResponse.history:type_name -> api.v1.PreviousEventsResponse.PreviousEvent
-	34, // 22: api.v1.EventStreamResponse.time:type_name -> google.protobuf.Timestamp
-	21, // 23: api.v1.EventStreamResponse.user_join:type_name -> api.v1.UserJoinEvent
-	22, // 24: api.v1.EventStreamResponse.user_leave:type_name -> api.v1.UserLeaveEvent
-	23, // 25: api.v1.EventStreamResponse.user_update:type_name -> api.v1.UserUpdateEvent
-	24, // 26: api.v1.EventStreamResponse.user_status:type_name -> api.v1.UserStatusEvent
-	25, // 27: api.v1.EventStreamResponse.user_typing:type_name -> api.v1.UserTypingEvent
-	26, // 28: api.v1.EventStreamResponse.chat_sent:type_name -> api.v1.ChatSentEvent
-	27, // 29: api.v1.EventStreamResponse.chat_edit:type_name -> api.v1.ChatEditEvent
-	28, // 30: api.v1.EventStreamResponse.emoji_reply:type_name -> api.v1.EmojiReplyEvent
-	29, // 31: api.v1.EventStreamResponse.emoji_remove:type_name -> api.v1.EmojiRemoveEvent
-	16, // 32: api.v1.UserJoinEvent.user:type_name -> api.v1.EventUser
-	1,  // 33: api.v1.UserJoinEvent.flags:type_name -> api.v1.UserFlag
-	16, // 34: api.v1.UserLeaveEvent.user:type_name -> api.v1.EventUser
-	16, // 35: api.v1.UserUpdateEvent.user:type_name -> api.v1.EventUser
-	4,  // 36: api.v1.UserUpdateEvent.before:type_name -> api.v1.UserDetails
-	16, // 37: api.v1.UserStatusEvent.user:type_name -> api.v1.EventUser
-	0,  // 38: api.v1.UserStatusEvent.status:type_name -> api.v1.UserStatus
-	0,  // 39: api.v1.UserStatusEvent.before:type_name -> api.v1.UserStatus
-	16, // 40: api.v1.UserTypingEvent.user:type_name -> api.v1.EventUser
-	2,  // 41: api.v1.UserTypingEvent.receiver_id:type_name -> api.v1.UUID
-	2,  // 42: api.v1.ChatSentEvent.chat_id:type_name -> api.v1.UUID
-	16, // 43: api.v1.ChatSentEvent.user:type_name -> api.v1.EventUser
-	2,  // 44: api.v1.ChatSentEvent.receiver_id:type_name -> api.v1.UUID
-	2,  // 45: api.v1.ChatSentEvent.reply_chat_id:type_name -> api.v1.UUID
-	32, // 46: api.v1.ChatSentEvent.text_edit:type_name -> api.v1.ChatSentEvent.Edit
-	5,  // 47: api.v1.ChatSentEvent.mentions:type_name -> api.v1.UserMention
-	33, // 48: api.v1.ChatSentEvent.emojis:type_name -> api.v1.ChatSentEvent.EmojiReply
-	2,  // 49: api.v1.ChatEditEvent.chat_id:type_name -> api.v1.UUID
-	2,  // 50: api.v1.EmojiReplyEvent.chat_id:type_name -> api.v1.UUID
-	2,  // 51: api.v1.EmojiRemoveEvent.chat_id:type_name -> api.v1.UUID
-	2,  // 52: api.v1.ActiveUsersResponse.User.id:type_name -> api.v1.UUID
-	4,  // 53: api.v1.ActiveUsersResponse.User.details:type_name -> api.v1.UserDetails
-	1,  // 54: api.v1.ActiveUsersResponse.User.flags:type_name -> api.v1.UserFlag
-	0,  // 55: api.v1.ActiveUsersResponse.User.status:type_name -> api.v1.UserStatus
-	34, // 56: api.v1.PreviousEventsResponse.PreviousEvent.time:type_name -> google.protobuf.Timestamp
-	21, // 57: api.v1.PreviousEventsResponse.PreviousEvent.user_join:type_name -> api.v1.UserJoinEvent
-	22, // 58: api.v1.PreviousEventsResponse.PreviousEvent.user_leave:type_name -> api.v1.UserLeaveEvent
-	23, // 59: api.v1.PreviousEventsResponse.PreviousEvent.user_update:type_name -> api.v1.UserUpdateEvent
-	26, // 60: api.v1.PreviousEventsResponse.PreviousEvent.chat_sent:type_name -> api.v1.ChatSentEvent
-	34, // 61: api.v1.ChatSentEvent.Edit.time:type_name -> google.protobuf.Timestamp
-	34, // 62: api.v1.ChatSentEvent.EmojiReply.time:type_name -> google.protobuf.Timestamp
-	16, // 63: api.v1.ChatSentEvent.EmojiReply.user:type_name -> api.v1.EventUser
-	6,  // 64: api.v1.AuthService.Join:input_type -> api.v1.JoinRequest
-	35, // 65: api.v1.AuthService.Renew:input_type -> google.protobuf.Empty
-	35, // 66: api.v1.AuthService.Leave:input_type -> google.protobuf.Empty
-	35, // 67: api.v1.UserService.ActiveUsers:input_type -> google.protobuf.Empty
-	10, // 68: api.v1.UserService.UpdateDetails:input_type -> api.v1.UpdateDetailsRequest
-	11, // 69: api.v1.UserService.UpdateStatus:input_type -> api.v1.UpdateStatusRequest
-	12, // 70: api.v1.UserService.IndicateTyping:input_type -> api.v1.IndicateTypingRequest
-	13, // 71: api.v1.UserService.SendChat:input_type -> api.v1.SendChatRequest
-	27, // 72: api.v1.UserService.EditChat:input_type -> api.v1.ChatEditEvent
-	15, // 73: api.v1.UserService.EmojiReply:input_type -> api.v1.EmojiReplyRequest
-	17, // 74: api.v1.EventsService.PreviousEvents:input_type -> api.v1.PreviousEventsRequest
-	35, // 75: api.v1.EventsService.EventStream:input_type -> google.protobuf.Empty
-	7,  // 76: api.v1.AuthService.Join:output_type -> api.v1.JoinResponse
-	8,  // 77: api.v1.AuthService.Renew:output_type -> api.v1.RenewResponse
-	35, // 78: api.v1.AuthService.Leave:output_type -> google.protobuf.Empty
-	9,  // 79: api.v1.UserService.ActiveUsers:output_type -> api.v1.ActiveUsersResponse
-	35, // 80: api.v1.UserService.UpdateDetails:output_type -> google.protobuf.Empty
-	35, // 81: api.v1.UserService.UpdateStatus:output_type -> google.protobuf.Empty
-	35, // 82: api.v1.UserService.IndicateTyping:output_type -> google.protobuf.Empty
-	35, // 83: api.v1.UserService.SendChat:output_type -> google.protobuf.Empty
-	35, // 84: api.v1.UserService.EditChat:output_type -> google.protobuf.Empty
-	35, // 85: api.v1.UserService.EmojiReply:output_type -> google.protobuf.Empty
-	18, // 86: api.v1.EventsService.PreviousEvents:output_type -> api.v1.PreviousEventsResponse
-	20, // 87: api.v1.EventsService.EventStream:output_type -> api.v1.EventStreamResponse
-	76, // [76:88] is the sub-list for method output_type
-	64, // [64:76] is the sub-list for method input_type
-	64, // [64:64] is the sub-list for extension type_name
-	64, // [64:64] is the sub-list for extension extendee
-	0,  // [0:64] is the sub-list for field type_name
+	2,  // 3: api.v1.ChatID.receiver_id:type_name -> api.v1.UUID
+	2,  // 4: api.v1.ChatID.chat_id:type_name -> api.v1.UUID
+	4,  // 5: api.v1.JoinRequest.user:type_name -> api.v1.UserDetails
+	1,  // 6: api.v1.JoinRequest.flags:type_name -> api.v1.UserFlag
+	34, // 7: api.v1.ActiveUsersResponse.time:type_name -> google.protobuf.Timestamp
+	30, // 8: api.v1.ActiveUsersResponse.users:type_name -> api.v1.ActiveUsersResponse.User
+	4,  // 9: api.v1.UpdateDetailsRequest.details:type_name -> api.v1.UserDetails
+	0,  // 10: api.v1.UpdateStatusRequest.status:type_name -> api.v1.UserStatus
+	2,  // 11: api.v1.IndicateTypingRequest.receiver_id:type_name -> api.v1.UUID
+	34, // 12: api.v1.SendChatRequest.time:type_name -> google.protobuf.Timestamp
+	2,  // 13: api.v1.SendChatRequest.receiver_id:type_name -> api.v1.UUID
+	2,  // 14: api.v1.SendChatRequest.reply_chat_id:type_name -> api.v1.UUID
+	5,  // 15: api.v1.SendChatRequest.mentions:type_name -> api.v1.UserMention
+	34, // 16: api.v1.EditChatRequest.time:type_name -> google.protobuf.Timestamp
+	6,  // 17: api.v1.EditChatRequest.chat:type_name -> api.v1.ChatID
+	34, // 18: api.v1.EmojiReplyRequest.time:type_name -> google.protobuf.Timestamp
+	6,  // 19: api.v1.EmojiReplyRequest.chat:type_name -> api.v1.ChatID
+	2,  // 20: api.v1.EventUser.id:type_name -> api.v1.UUID
+	4,  // 21: api.v1.EventUser.details:type_name -> api.v1.UserDetails
+	34, // 22: api.v1.PreviousEventsRequest.until_time:type_name -> google.protobuf.Timestamp
+	31, // 23: api.v1.PreviousEventsResponse.history:type_name -> api.v1.PreviousEventsResponse.PreviousEvent
+	34, // 24: api.v1.EventStreamResponse.time:type_name -> google.protobuf.Timestamp
+	22, // 25: api.v1.EventStreamResponse.user_join:type_name -> api.v1.UserJoinEvent
+	23, // 26: api.v1.EventStreamResponse.user_leave:type_name -> api.v1.UserLeaveEvent
+	24, // 27: api.v1.EventStreamResponse.user_update:type_name -> api.v1.UserUpdateEvent
+	25, // 28: api.v1.EventStreamResponse.user_status:type_name -> api.v1.UserStatusEvent
+	26, // 29: api.v1.EventStreamResponse.user_typing:type_name -> api.v1.UserTypingEvent
+	27, // 30: api.v1.EventStreamResponse.chat_sent:type_name -> api.v1.ChatSentEvent
+	28, // 31: api.v1.EventStreamResponse.chat_edit:type_name -> api.v1.ChatEditEvent
+	29, // 32: api.v1.EventStreamResponse.emoji_reply:type_name -> api.v1.EmojiReplyEvent
+	17, // 33: api.v1.UserJoinEvent.user:type_name -> api.v1.EventUser
+	1,  // 34: api.v1.UserJoinEvent.flags:type_name -> api.v1.UserFlag
+	17, // 35: api.v1.UserLeaveEvent.user:type_name -> api.v1.EventUser
+	17, // 36: api.v1.UserUpdateEvent.user:type_name -> api.v1.EventUser
+	4,  // 37: api.v1.UserUpdateEvent.before:type_name -> api.v1.UserDetails
+	17, // 38: api.v1.UserStatusEvent.user:type_name -> api.v1.EventUser
+	0,  // 39: api.v1.UserStatusEvent.status:type_name -> api.v1.UserStatus
+	0,  // 40: api.v1.UserStatusEvent.before:type_name -> api.v1.UserStatus
+	17, // 41: api.v1.UserTypingEvent.user:type_name -> api.v1.EventUser
+	2,  // 42: api.v1.UserTypingEvent.receiver_id:type_name -> api.v1.UUID
+	2,  // 43: api.v1.ChatSentEvent.chat_id:type_name -> api.v1.UUID
+	17, // 44: api.v1.ChatSentEvent.user:type_name -> api.v1.EventUser
+	2,  // 45: api.v1.ChatSentEvent.receiver_id:type_name -> api.v1.UUID
+	2,  // 46: api.v1.ChatSentEvent.reply_chat_id:type_name -> api.v1.UUID
+	32, // 47: api.v1.ChatSentEvent.text_edit:type_name -> api.v1.ChatSentEvent.Edit
+	5,  // 48: api.v1.ChatSentEvent.mentions:type_name -> api.v1.UserMention
+	33, // 49: api.v1.ChatSentEvent.emojis:type_name -> api.v1.ChatSentEvent.EmojiReply
+	17, // 50: api.v1.ChatEditEvent.user:type_name -> api.v1.EventUser
+	6,  // 51: api.v1.ChatEditEvent.chat:type_name -> api.v1.ChatID
+	17, // 52: api.v1.EmojiReplyEvent.user:type_name -> api.v1.EventUser
+	6,  // 53: api.v1.EmojiReplyEvent.chat:type_name -> api.v1.ChatID
+	2,  // 54: api.v1.ActiveUsersResponse.User.id:type_name -> api.v1.UUID
+	4,  // 55: api.v1.ActiveUsersResponse.User.details:type_name -> api.v1.UserDetails
+	1,  // 56: api.v1.ActiveUsersResponse.User.flags:type_name -> api.v1.UserFlag
+	0,  // 57: api.v1.ActiveUsersResponse.User.status:type_name -> api.v1.UserStatus
+	34, // 58: api.v1.PreviousEventsResponse.PreviousEvent.time:type_name -> google.protobuf.Timestamp
+	22, // 59: api.v1.PreviousEventsResponse.PreviousEvent.user_join:type_name -> api.v1.UserJoinEvent
+	23, // 60: api.v1.PreviousEventsResponse.PreviousEvent.user_leave:type_name -> api.v1.UserLeaveEvent
+	24, // 61: api.v1.PreviousEventsResponse.PreviousEvent.user_update:type_name -> api.v1.UserUpdateEvent
+	27, // 62: api.v1.PreviousEventsResponse.PreviousEvent.chat_sent:type_name -> api.v1.ChatSentEvent
+	34, // 63: api.v1.ChatSentEvent.Edit.time:type_name -> google.protobuf.Timestamp
+	34, // 64: api.v1.ChatSentEvent.EmojiReply.time:type_name -> google.protobuf.Timestamp
+	17, // 65: api.v1.ChatSentEvent.EmojiReply.user:type_name -> api.v1.EventUser
+	7,  // 66: api.v1.AuthService.Join:input_type -> api.v1.JoinRequest
+	35, // 67: api.v1.AuthService.Keepalive:input_type -> google.protobuf.Empty
+	35, // 68: api.v1.AuthService.Renew:input_type -> google.protobuf.Empty
+	35, // 69: api.v1.AuthService.Leave:input_type -> google.protobuf.Empty
+	35, // 70: api.v1.RegistryService.ActiveUsers:input_type -> google.protobuf.Empty
+	11, // 71: api.v1.UserService.UpdateDetails:input_type -> api.v1.UpdateDetailsRequest
+	12, // 72: api.v1.UserService.UpdateStatus:input_type -> api.v1.UpdateStatusRequest
+	13, // 73: api.v1.UserService.IndicateTyping:input_type -> api.v1.IndicateTypingRequest
+	14, // 74: api.v1.UserService.SendChat:input_type -> api.v1.SendChatRequest
+	15, // 75: api.v1.UserService.EditChat:input_type -> api.v1.EditChatRequest
+	16, // 76: api.v1.UserService.EmojiReply:input_type -> api.v1.EmojiReplyRequest
+	18, // 77: api.v1.EventsService.PreviousEvents:input_type -> api.v1.PreviousEventsRequest
+	35, // 78: api.v1.EventsService.EventStream:input_type -> google.protobuf.Empty
+	8,  // 79: api.v1.AuthService.Join:output_type -> api.v1.JoinResponse
+	35, // 80: api.v1.AuthService.Keepalive:output_type -> google.protobuf.Empty
+	9,  // 81: api.v1.AuthService.Renew:output_type -> api.v1.RenewResponse
+	35, // 82: api.v1.AuthService.Leave:output_type -> google.protobuf.Empty
+	10, // 83: api.v1.RegistryService.ActiveUsers:output_type -> api.v1.ActiveUsersResponse
+	35, // 84: api.v1.UserService.UpdateDetails:output_type -> google.protobuf.Empty
+	35, // 85: api.v1.UserService.UpdateStatus:output_type -> google.protobuf.Empty
+	35, // 86: api.v1.UserService.IndicateTyping:output_type -> google.protobuf.Empty
+	35, // 87: api.v1.UserService.SendChat:output_type -> google.protobuf.Empty
+	35, // 88: api.v1.UserService.EditChat:output_type -> google.protobuf.Empty
+	35, // 89: api.v1.UserService.EmojiReply:output_type -> google.protobuf.Empty
+	19, // 90: api.v1.EventsService.PreviousEvents:output_type -> api.v1.PreviousEventsResponse
+	21, // 91: api.v1.EventsService.EventStream:output_type -> api.v1.EventStreamResponse
+	79, // [79:92] is the sub-list for method output_type
+	66, // [66:79] is the sub-list for method input_type
+	66, // [66:66] is the sub-list for extension type_name
+	66, // [66:66] is the sub-list for extension extendee
+	0,  // [0:66] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_apiv1_proto_init() }
@@ -2448,11 +2470,11 @@ func file_api_v1_apiv1_proto_init() {
 	if File_api_v1_apiv1_proto != nil {
 		return
 	}
-	file_api_v1_apiv1_proto_msgTypes[17].OneofWrappers = []any{
+	file_api_v1_apiv1_proto_msgTypes[18].OneofWrappers = []any{
 		(*EventStreamRequest_Start)(nil),
 		(*EventStreamRequest_Ack)(nil),
 	}
-	file_api_v1_apiv1_proto_msgTypes[18].OneofWrappers = []any{
+	file_api_v1_apiv1_proto_msgTypes[19].OneofWrappers = []any{
 		(*EventStreamResponse_UserJoin)(nil),
 		(*EventStreamResponse_UserLeave)(nil),
 		(*EventStreamResponse_UserUpdate)(nil),
@@ -2461,7 +2483,6 @@ func file_api_v1_apiv1_proto_init() {
 		(*EventStreamResponse_ChatSent)(nil),
 		(*EventStreamResponse_ChatEdit)(nil),
 		(*EventStreamResponse_EmojiReply)(nil),
-		(*EventStreamResponse_EmojiRemove)(nil),
 	}
 	file_api_v1_apiv1_proto_msgTypes[29].OneofWrappers = []any{
 		(*PreviousEventsResponse_PreviousEvent_UserJoin)(nil),
@@ -2477,7 +2498,7 @@ func file_api_v1_apiv1_proto_init() {
 			NumEnums:      2,
 			NumMessages:   32,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_api_v1_apiv1_proto_goTypes,
 		DependencyIndexes: file_api_v1_apiv1_proto_depIdxs,

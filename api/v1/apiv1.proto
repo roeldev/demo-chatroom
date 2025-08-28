@@ -22,13 +22,15 @@ message Color {
 
 enum UserStatus {
     USER_STATUS_DEFAULT = 0;
-    USER_STATUS_BUSY = 1;
-    USER_STATUS_AWAY = 2;
+    USER_STATUS_UNRESPONSIVE = 1;
+    USER_STATUS_BUSY = 2;
+    USER_STATUS_AWAY = 3;
 }
 
 enum UserFlag {
     USER_FLAG_NONE = 0;
-    USER_FLAG_IS_BOT = 1;
+    USER_FLAG_IS_BOT = 1; // indicates user is a bot
+    USER_FLAG_NO_DM = 2; // indicate user does not accept direct/private messages
 }
 
 message UserDetails {
@@ -43,10 +45,16 @@ message UserMention {
     string user_name = 2;
 }
 
+message ChatID {
+    UUID receiver_id = 1; // empty = global chatroom
+    UUID chat_id = 2;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 service AuthService {
     rpc Join(JoinRequest) returns (JoinResponse) {}
+    rpc Keepalive(google.protobuf.Empty) returns (google.protobuf.Empty) {}
     rpc Renew(google.protobuf.Empty) returns (RenewResponse) {}
     rpc Leave(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
@@ -66,14 +74,8 @@ message RenewResponse {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-service UserService {
+service RegistryService {
     rpc ActiveUsers(google.protobuf.Empty) returns (ActiveUsersResponse) {}
-    rpc UpdateDetails(UpdateDetailsRequest) returns (google.protobuf.Empty) {}
-    rpc UpdateStatus(UpdateStatusRequest) returns (google.protobuf.Empty) {}
-    rpc IndicateTyping(IndicateTypingRequest) returns (google.protobuf.Empty) {}
-    rpc SendChat(SendChatRequest) returns (google.protobuf.Empty) {}
-    rpc EditChat(ChatEditEvent) returns (google.protobuf.Empty) {}
-    rpc EmojiReply(EmojiReplyRequest) returns (google.protobuf.Empty) {}
 }
 
 message ActiveUsersResponse {
@@ -88,6 +90,17 @@ message ActiveUsersResponse {
     repeated User users = 2;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+service UserService {
+    rpc UpdateDetails(UpdateDetailsRequest) returns (google.protobuf.Empty) {}
+    rpc UpdateStatus(UpdateStatusRequest) returns (google.protobuf.Empty) {}
+    rpc IndicateTyping(IndicateTypingRequest) returns (google.protobuf.Empty) {}
+    rpc SendChat(SendChatRequest) returns (google.protobuf.Empty) {}
+    rpc EditChat(EditChatRequest) returns (google.protobuf.Empty) {}
+    rpc EmojiReply(EmojiReplyRequest) returns (google.protobuf.Empty) {}
+}
+
 message UpdateDetailsRequest {
     UserDetails details = 1;
 }
@@ -97,35 +110,29 @@ message UpdateStatusRequest {
 }
 
 message IndicateTypingRequest {
-    // no receiver = global chatroom
-    UUID receiver_id = 1;
+    UUID receiver_id = 1; // empty = global chatroom
     bool typing = 2;
 }
 
-//message Chat {
-//    optional UUID receiver_id = 1; // no receiver = global chatroom
-//    optional UUID chat_id = 2;
-//}
-
 message SendChatRequest {
     google.protobuf.Timestamp time = 1;
-    // no receiver = global chatroom
-    UUID receiver_id = 2;
-    UUID reply_chat_id = 3;
+    UUID receiver_id = 2; // empty = global chatroom
+    UUID reply_chat_id = 3; // empty = no reply = new chat
     string text = 4;
     repeated UserMention mentions = 5;
 }
 
 message EditChatRequest {
     google.protobuf.Timestamp time = 1;
-    UUID chat_id = 2;
+    ChatID chat = 2;
     string text = 3;
 }
 
 message EmojiReplyRequest {
     google.protobuf.Timestamp time = 1;
-    UUID reply_chat_id = 3;
-    bytes emoji = 4;
+    ChatID chat = 2;
+    bytes emoji = 3;
+    bool add = 4; // true = add, false = remove
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -179,7 +186,6 @@ message EventStreamResponse {
         ChatSentEvent chat_sent = 20;
         ChatEditEvent chat_edit = 21;
         EmojiReplyEvent emoji_reply = 22;
-        EmojiRemoveEvent emoji_remove = 23;
     }
 }
 
@@ -210,8 +216,7 @@ message UserStatusEvent {
 // User is typing a message
 message UserTypingEvent {
     EventUser user = 1;
-    // receiver user's UUID, or global chatroom on empty
-    UUID receiver_id = 2;
+    UUID receiver_id = 2; // empty = global chatroom
     bool typing = 3;
 }
 
@@ -230,7 +235,6 @@ message ChatSentEvent {
 
     UUID chat_id = 1; // id of this chat
     EventUser user = 2;
-    // receiver user's UUID, or global chatroom on empty
     UUID receiver_id = 3;
     UUID reply_chat_id = 4;
     string text = 5;
@@ -240,16 +244,14 @@ message ChatSentEvent {
 }
 
 message ChatEditEvent {
-    UUID chat_id = 1;
-    string text = 2;
+    EventUser user = 1;
+    ChatID chat = 2;
+    string text = 3;
 }
 
 message EmojiReplyEvent {
-    UUID chat_id = 1;
-    bytes emoji = 2;
-}
-
-message EmojiRemoveEvent {
-    UUID chat_id = 1;
-    bytes emoji = 2;
+    EventUser user = 1;
+    ChatID chat = 2;
+    bytes emoji = 3;
+    bool add = 4; // true = add, false = remove
 }

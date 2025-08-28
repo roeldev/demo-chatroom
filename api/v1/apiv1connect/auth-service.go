@@ -45,6 +45,11 @@ func (svc *AuthService) Join(_ context.Context, req *connect.Request[apiv1.JoinR
 	}), nil
 }
 
+func (svc *AuthService) Keepalive(ctx context.Context, _ *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (svc *AuthService) Renew(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[apiv1.RenewResponse], error) {
 	oldClaims := getClaims(ctx)
 	newClaims := chatauth.RenewClaims(oldClaims)
