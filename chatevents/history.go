@@ -5,6 +5,7 @@
 package chatevents
 
 import (
+	"github.com/google/uuid"
 	"github.com/roeldev/demo-chatroom/chatevents/event"
 )
 
@@ -27,6 +28,11 @@ func NewHistoryHandler(store EventsStore) *HistoryHandler {
 }
 
 func (his *HistoryHandler) HandleEvent(e Event) {
+	if re := e.AsReceiverEvent(); re != nil && re.GetReceiverID() != uuid.Nil {
+		// do not store events in history when sent to a receiver
+		return
+	}
+
 	switch et := e.Type.(type) {
 	case *event.UserTypingEvent:
 		// user typing is not stored in history
