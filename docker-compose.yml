@@ -1,0 +1,53 @@
+services:
+  api:
+    image: roeldev/demo-chatroom-api:local
+    build:
+      context: .
+      args:
+        APP: api-server
+    user: nonroot
+    env_file:
+      - ./cmd/api-server/.env
+      - ./cmd/api-server/.env.local
+    ports:
+      - "8080:8080"
+
+  web:
+    image: roeldev/demo-chatroom-web:local
+    build:
+      context: .
+      args:
+        APP: web-server
+    user: nonroot
+    env_file:
+      - ./cmd/web-server/.env
+      - ./cmd/web-server/.env.local
+    ports:
+      - "8081:8080"
+
+  chatter-bot:
+    image: roeldev/demo-chatroom-chatter-bot:local
+    build:
+      network: host
+      context: .
+      args:
+        APP: chatter-bot
+    user: nonroot
+    env_file:
+      - ./cmd/chatter-bot/.env
+    environment:
+      LOG_LEVEL: debug
+      API_SERVER_HOST: host.docker.internal
+    deploy:
+      replicas: 8
+      mode: replicated
+
+  welcome-bot:
+    image: roeldev/demo-chatroom-welcome-bot:local
+    build:
+      context: .
+      args:
+        APP: welcome-bot
+    user: nonroot
+    env_file:
+      - ./cmd/welcome-bot/.env
