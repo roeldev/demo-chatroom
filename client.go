@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"connectrpc.com/connect"
-	"github.com/go-pogo/errors"
 	"github.com/go-pogo/serv"
 	apiv1 "github.com/roeldev/demo-chatroom/api/v1"
 	"github.com/roeldev/demo-chatroom/api/v1/apiv1connect"
@@ -74,18 +73,14 @@ func (c *Client) HTTPClient() connect.HTTPClient { return c.httpClient }
 func (c *Client) Interceptor() connect.Interceptor { return c.interceptor }
 
 func (c *Client) Login(ctx context.Context, user *apiv1.UserDetails) error {
-	if _, err := c.Join(ctx, connect.NewRequest(&apiv1.JoinRequest{
+	_, err := c.Join(ctx, connect.NewRequest(&apiv1.JoinRequest{
 		User:  user,
 		Flags: apiv1.UserFlag_USER_FLAG_IS_BOT,
-	})); err != nil {
-		return errors.Wrap(err, "failed to join")
-	}
-	return nil
+	}))
+	return err
 }
 
 func (c *Client) Logout(ctx context.Context) error {
-	if _, err := c.Leave(ctx, connect.NewRequest(&emptypb.Empty{})); err != nil {
-		return errors.Wrap(err, "failed to gracefully leave")
-	}
-	return nil
+	_, err := c.Leave(ctx, connect.NewRequest(&emptypb.Empty{}))
+	return err
 }
