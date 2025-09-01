@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/roeldev/demo-chatroom/chatevents/event"
-	"github.com/rs/zerolog"
 )
 
 type EventHandler interface {
@@ -27,18 +26,16 @@ type Publisher interface {
 var _ Publisher = (*EventsBroker)(nil)
 
 type EventsBroker struct {
-	log      zerolog.Logger
 	mut      sync.RWMutex
 	handlers []EventHandler
 }
 
-func NewEventsBroker(log zerolog.Logger, h ...EventHandler) *EventsBroker {
+func NewEventsBroker(h ...EventHandler) *EventsBroker {
 	if h == nil {
 		h = make([]EventHandler, 0, 2)
 	}
 
 	return &EventsBroker{
-		log:      log,
 		handlers: h,
 	}
 }
@@ -54,7 +51,6 @@ func (eb *EventsBroker) Publish(typ event.Type) {
 		Time: time.Now(),
 		Type: typ,
 	}
-	eb.log.Info().EmbedObject(e).Msg("publish")
 
 	eb.mut.RLock()
 	defer eb.mut.RUnlock()
