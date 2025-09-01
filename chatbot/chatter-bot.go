@@ -15,6 +15,7 @@ import (
 	chatroom "github.com/roeldev/demo-chatroom"
 	apiv1 "github.com/roeldev/demo-chatroom/api/v1"
 	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -54,11 +55,16 @@ func (bot *ChatterBot) Login(ctx context.Context, user *apiv1.UserDetails) error
 }
 
 func (bot *ChatterBot) Chatter(ctx context.Context) error {
+	keepalive := bot.Keepalive(ctx)
+	keepalive.Send(&emptypb.Empty{})
+	defer func() {
+		_, _ = keepalive.CloseAndReceive()
+	}()
+
 	timer := time.NewTimer(time.Second * time.Duration(rand.IntN(bot.rand.min)))
 	defer timer.Stop()
 
 	var nextMsg string
-
 	for {
 		select {
 		case <-ctx.Done():
