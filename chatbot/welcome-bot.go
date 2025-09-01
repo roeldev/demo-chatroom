@@ -31,7 +31,7 @@ func NewWelcomeBot(conf chatroom.ClientConfig, log zerolog.Logger) *WelcomeBot {
 		botClient: client,
 		events: apiv1connect.NewEventsServiceClient(
 			client.HTTPClient(),
-			conf.BaseURL(),
+			client.BaseURL(),
 			connect.WithInterceptors(client.Interceptor()),
 		),
 	}

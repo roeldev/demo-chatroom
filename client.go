@@ -40,6 +40,7 @@ type Client struct {
 	authServiceClient
 	userServiceClient
 
+	baseURL     string
 	httpClient  connect.HTTPClient
 	interceptor connect.Interceptor
 }
@@ -50,6 +51,7 @@ func NewClient(conf ClientConfig) *Client {
 	interceptor := apiv1connect.NewClientInterceptor("")
 
 	return &Client{
+		baseURL:     baseURL,
 		httpClient:  client,
 		interceptor: interceptor,
 
@@ -67,6 +69,8 @@ func NewClient(conf ClientConfig) *Client {
 		),
 	}
 }
+
+func (c *Client) BaseURL() string { return c.baseURL }
 
 func (c *Client) HTTPClient() connect.HTTPClient { return c.httpClient }
 

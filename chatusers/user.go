@@ -24,8 +24,9 @@ func (f Flag) Has(flag Flag) bool { return f&flag != 0 }
 
 //goland:noinspection GoSnakeCaseUsage
 const (
-	Flag_None Flag = iota
-	Flag_IsBot
+	Flag_IsBot Flag = 1 << iota
+	Flag_NoDirectMessages
+	Flag_None Flag = 0
 )
 
 type Status uint8
@@ -33,6 +34,7 @@ type Status uint8
 //goland:noinspection GoSnakeCaseUsage
 const (
 	Status_Default Status = iota
+	Status_Unresponsive
 	Status_Busy
 	Status_Away
 )
