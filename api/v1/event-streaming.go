@@ -23,7 +23,8 @@ func NewEventStreamResponseEvent(typ event.Type) EventStreamResponseEvent {
 	case *event.UserLeaveEvent:
 		return &EventStreamResponse_UserLeave{
 			UserLeave: &UserLeaveEvent{
-				User: NewEventUser(et),
+				User:   NewEventUser(et),
+				Reason: NewLeaveReason(et.Reason),
 			},
 		}
 

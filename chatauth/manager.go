@@ -13,7 +13,7 @@ import (
 )
 
 type Leaver interface {
-	Leave(uid chatusers.UserID)
+	Leave(uid chatusers.UserID, reason event.LeaveReason)
 }
 
 type Manager struct {
@@ -54,6 +54,7 @@ func (man *Manager) Leave(uid chatusers.UserID) {
 		man.event.Publish(&event.UserLeaveEvent{
 			UserID:      uid,
 			UserDetails: user.UserDetails,
+			Reason:      reason,
 		})
 	}
 }

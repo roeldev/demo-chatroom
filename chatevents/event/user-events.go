@@ -10,6 +10,14 @@ import (
 	"github.com/rs/zerolog"
 )
 
+type LeaveReason uint8
+
+//goland:noinspection GoSnakeCaseUsage
+const (
+	UserLeave LeaveReason = iota
+	Disconnected
+)
+
 var (
 	_ UserEvent = (*UserJoinEvent)(nil)
 	_ UserEvent = (*UserLeaveEvent)(nil)
@@ -28,6 +36,7 @@ type UserLeaveEvent struct {
 	event
 	UserID      chatusers.UserID
 	UserDetails chatusers.UserDetails
+	Reason      LeaveReason
 }
 
 type UserUpdateEvent struct {

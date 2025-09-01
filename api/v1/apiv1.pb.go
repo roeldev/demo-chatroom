@@ -25,60 +25,12 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type UserStatus int32
-
-const (
-	UserStatus_USER_STATUS_DEFAULT UserStatus = 0
-	UserStatus_USER_STATUS_BUSY    UserStatus = 1
-	UserStatus_USER_STATUS_AWAY    UserStatus = 2
-)
-
-// Enum value maps for UserStatus.
-var (
-	UserStatus_name = map[int32]string{
-		0: "USER_STATUS_DEFAULT",
-		1: "USER_STATUS_BUSY",
-		2: "USER_STATUS_AWAY",
-	}
-	UserStatus_value = map[string]int32{
-		"USER_STATUS_DEFAULT": 0,
-		"USER_STATUS_BUSY":    1,
-		"USER_STATUS_AWAY":    2,
-	}
-)
-
-func (x UserStatus) Enum() *UserStatus {
-	p := new(UserStatus)
-	*p = x
-	return p
-}
-
-func (x UserStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (UserStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_api_v1_apiv1_proto_enumTypes[0].Descriptor()
-}
-
-func (UserStatus) Type() protoreflect.EnumType {
-	return &file_api_v1_apiv1_proto_enumTypes[0]
-}
-
-func (x UserStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use UserStatus.Descriptor instead.
-func (UserStatus) EnumDescriptor() ([]byte, []int) {
-	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{0}
-}
-
 type UserFlag int32
 
 const (
 	UserFlag_USER_FLAG_NONE   UserFlag = 0
-	UserFlag_USER_FLAG_IS_BOT UserFlag = 1
+	UserFlag_USER_FLAG_IS_BOT UserFlag = 1 // indicates user is a bot
+	UserFlag_USER_FLAG_NO_DM  UserFlag = 2 // indicate user does not accept direct/private messages
 )
 
 // Enum value maps for UserFlag.
@@ -86,10 +38,12 @@ var (
 	UserFlag_name = map[int32]string{
 		0: "USER_FLAG_NONE",
 		1: "USER_FLAG_IS_BOT",
+		2: "USER_FLAG_NO_DM",
 	}
 	UserFlag_value = map[string]int32{
 		"USER_FLAG_NONE":   0,
 		"USER_FLAG_IS_BOT": 1,
+		"USER_FLAG_NO_DM":  2,
 	}
 )
 
@@ -104,11 +58,11 @@ func (x UserFlag) String() string {
 }
 
 func (UserFlag) Descriptor() protoreflect.EnumDescriptor {
-	return file_api_v1_apiv1_proto_enumTypes[1].Descriptor()
+	return file_api_v1_apiv1_proto_enumTypes[0].Descriptor()
 }
 
 func (UserFlag) Type() protoreflect.EnumType {
-	return &file_api_v1_apiv1_proto_enumTypes[1]
+	return &file_api_v1_apiv1_proto_enumTypes[0]
 }
 
 func (x UserFlag) Number() protoreflect.EnumNumber {
@@ -117,7 +71,105 @@ func (x UserFlag) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UserFlag.Descriptor instead.
 func (UserFlag) EnumDescriptor() ([]byte, []int) {
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{0}
+}
+
+type UserStatus int32
+
+const (
+	UserStatus_USER_STATUS_DEFAULT      UserStatus = 0
+	UserStatus_USER_STATUS_UNRESPONSIVE UserStatus = 1
+	UserStatus_USER_STATUS_BUSY         UserStatus = 2
+	UserStatus_USER_STATUS_AWAY         UserStatus = 3
+)
+
+// Enum value maps for UserStatus.
+var (
+	UserStatus_name = map[int32]string{
+		0: "USER_STATUS_DEFAULT",
+		1: "USER_STATUS_UNRESPONSIVE",
+		2: "USER_STATUS_BUSY",
+		3: "USER_STATUS_AWAY",
+	}
+	UserStatus_value = map[string]int32{
+		"USER_STATUS_DEFAULT":      0,
+		"USER_STATUS_UNRESPONSIVE": 1,
+		"USER_STATUS_BUSY":         2,
+		"USER_STATUS_AWAY":         3,
+	}
+)
+
+func (x UserStatus) Enum() *UserStatus {
+	p := new(UserStatus)
+	*p = x
+	return p
+}
+
+func (x UserStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UserStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_v1_apiv1_proto_enumTypes[1].Descriptor()
+}
+
+func (UserStatus) Type() protoreflect.EnumType {
+	return &file_api_v1_apiv1_proto_enumTypes[1]
+}
+
+func (x UserStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UserStatus.Descriptor instead.
+func (UserStatus) EnumDescriptor() ([]byte, []int) {
 	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{1}
+}
+
+type LeaveReason int32
+
+const (
+	LeaveReason_LEAVE_REASON_USER_ACTION  LeaveReason = 0
+	LeaveReason_LEAVE_REASON_DISCONNECTED LeaveReason = 1
+)
+
+// Enum value maps for LeaveReason.
+var (
+	LeaveReason_name = map[int32]string{
+		0: "LEAVE_REASON_USER_ACTION",
+		1: "LEAVE_REASON_DISCONNECTED",
+	}
+	LeaveReason_value = map[string]int32{
+		"LEAVE_REASON_USER_ACTION":  0,
+		"LEAVE_REASON_DISCONNECTED": 1,
+	}
+)
+
+func (x LeaveReason) Enum() *LeaveReason {
+	p := new(LeaveReason)
+	*p = x
+	return p
+}
+
+func (x LeaveReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (LeaveReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_v1_apiv1_proto_enumTypes[2].Descriptor()
+}
+
+func (LeaveReason) Type() protoreflect.EnumType {
+	return &file_api_v1_apiv1_proto_enumTypes[2]
+}
+
+func (x LeaveReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use LeaveReason.Descriptor instead.
+func (LeaveReason) EnumDescriptor() ([]byte, []int) {
+	return file_api_v1_apiv1_proto_rawDescGZIP(), []int{2}
 }
 
 // //////////////////////////////////////////////////////////////////////////////
@@ -1391,6 +1443,7 @@ func (x *UserJoinEvent) GetFlags() UserFlag {
 type UserLeaveEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *EventUser             `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	Reason        LeaveReason            `protobuf:"varint,2,opt,name=reason,enum=api.v1.LeaveReason" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1430,6 +1483,13 @@ func (x *UserLeaveEvent) GetUser() *EventUser {
 		return x.User
 	}
 	return nil
+}
+
+func (x *UserLeaveEvent) GetReason() LeaveReason {
+	if x != nil {
+		return x.Reason
+	}
+	return LeaveReason_LEAVE_REASON_USER_ACTION
 }
 
 // User update's its details
@@ -2244,9 +2304,10 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\x05event\"^\n" +
 	"\rUserJoinEvent\x12%\n" +
 	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12&\n" +
-	"\x05flags\x18\x02 \x01(\x0e2\x10.api.v1.UserFlagR\x05flags\"7\n" +
+	"\x05flags\x18\x02 \x01(\x0e2\x10.api.v1.UserFlagR\x05flags\"d\n" +
 	"\x0eUserLeaveEvent\x12%\n" +
-	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\"e\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12+\n" +
+	"\x06reason\x18\x02 \x01(\x0e2\x13.api.v1.LeaveReasonR\x06reason\"e\n" +
 	"\x0fUserUpdateEvent\x12%\n" +
 	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12+\n" +
 	"\x06before\x18\x02 \x01(\v2\x13.api.v1.UserDetailsR\x06before\"\x90\x01\n" +
@@ -2285,18 +2346,23 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\x04user\x18\x01 \x01(\v2\x11.api.v1.EventUserR\x04user\x12\"\n" +
 	"\x04chat\x18\x02 \x01(\v2\x0e.api.v1.ChatIDR\x04chat\x12\x14\n" +
 	"\x05emoji\x18\x03 \x01(\fR\x05emoji\x12\x10\n" +
-	"\x03add\x18\x04 \x01(\bR\x03add*Q\n" +
-	"\n" +
-	"UserStatus\x12\x17\n" +
-	"\x13USER_STATUS_DEFAULT\x10\x00\x12\x14\n" +
-	"\x10USER_STATUS_BUSY\x10\x01\x12\x14\n" +
-	"\x10USER_STATUS_AWAY\x10\x02*4\n" +
+	"\x03add\x18\x04 \x01(\bR\x03add*I\n" +
 	"\bUserFlag\x12\x12\n" +
 	"\x0eUSER_FLAG_NONE\x10\x00\x12\x14\n" +
-	"\x10USER_FLAG_IS_BOT\x10\x012\xf6\x01\n" +
+	"\x10USER_FLAG_IS_BOT\x10\x01\x12\x13\n" +
+	"\x0fUSER_FLAG_NO_DM\x10\x02*o\n" +
+	"\n" +
+	"UserStatus\x12\x17\n" +
+	"\x13USER_STATUS_DEFAULT\x10\x00\x12\x1c\n" +
+	"\x18USER_STATUS_UNRESPONSIVE\x10\x01\x12\x14\n" +
+	"\x10USER_STATUS_BUSY\x10\x02\x12\x14\n" +
+	"\x10USER_STATUS_AWAY\x10\x03*J\n" +
+	"\vLeaveReason\x12\x1c\n" +
+	"\x18LEAVE_REASON_USER_ACTION\x10\x00\x12\x1d\n" +
+	"\x19LEAVE_REASON_DISCONNECTED\x10\x012\xf8\x01\n" +
 	"\vAuthService\x123\n" +
-	"\x04Join\x12\x13.api.v1.JoinRequest\x1a\x14.api.v1.JoinResponse\"\x00\x12=\n" +
-	"\tKeepalive\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00\x128\n" +
+	"\x04Join\x12\x13.api.v1.JoinRequest\x1a\x14.api.v1.JoinResponse\"\x00\x12?\n" +
+	"\tKeepalive\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00(\x01\x128\n" +
 	"\x05Renew\x12\x16.google.protobuf.Empty\x1a\x15.api.v1.RenewResponse\"\x00\x129\n" +
 	"\x05Leave\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x002W\n" +
 	"\x0fRegistryService\x12D\n" +
@@ -2325,144 +2391,146 @@ func file_api_v1_apiv1_proto_rawDescGZIP() []byte {
 	return file_api_v1_apiv1_proto_rawDescData
 }
 
-var file_api_v1_apiv1_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_api_v1_apiv1_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_api_v1_apiv1_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_api_v1_apiv1_proto_goTypes = []any{
-	(UserStatus)(0),                              // 0: api.v1.UserStatus
-	(UserFlag)(0),                                // 1: api.v1.UserFlag
-	(*UUID)(nil),                                 // 2: api.v1.UUID
-	(*Color)(nil),                                // 3: api.v1.Color
-	(*UserDetails)(nil),                          // 4: api.v1.UserDetails
-	(*UserMention)(nil),                          // 5: api.v1.UserMention
-	(*ChatID)(nil),                               // 6: api.v1.ChatID
-	(*JoinRequest)(nil),                          // 7: api.v1.JoinRequest
-	(*JoinResponse)(nil),                         // 8: api.v1.JoinResponse
-	(*RenewResponse)(nil),                        // 9: api.v1.RenewResponse
-	(*ActiveUsersResponse)(nil),                  // 10: api.v1.ActiveUsersResponse
-	(*UpdateDetailsRequest)(nil),                 // 11: api.v1.UpdateDetailsRequest
-	(*UpdateStatusRequest)(nil),                  // 12: api.v1.UpdateStatusRequest
-	(*IndicateTypingRequest)(nil),                // 13: api.v1.IndicateTypingRequest
-	(*SendChatRequest)(nil),                      // 14: api.v1.SendChatRequest
-	(*EditChatRequest)(nil),                      // 15: api.v1.EditChatRequest
-	(*EmojiReplyRequest)(nil),                    // 16: api.v1.EmojiReplyRequest
-	(*EventUser)(nil),                            // 17: api.v1.EventUser
-	(*PreviousEventsRequest)(nil),                // 18: api.v1.PreviousEventsRequest
-	(*PreviousEventsResponse)(nil),               // 19: api.v1.PreviousEventsResponse
-	(*EventStreamRequest)(nil),                   // 20: api.v1.EventStreamRequest
-	(*EventStreamResponse)(nil),                  // 21: api.v1.EventStreamResponse
-	(*UserJoinEvent)(nil),                        // 22: api.v1.UserJoinEvent
-	(*UserLeaveEvent)(nil),                       // 23: api.v1.UserLeaveEvent
-	(*UserUpdateEvent)(nil),                      // 24: api.v1.UserUpdateEvent
-	(*UserStatusEvent)(nil),                      // 25: api.v1.UserStatusEvent
-	(*UserTypingEvent)(nil),                      // 26: api.v1.UserTypingEvent
-	(*ChatSentEvent)(nil),                        // 27: api.v1.ChatSentEvent
-	(*ChatEditEvent)(nil),                        // 28: api.v1.ChatEditEvent
-	(*EmojiReplyEvent)(nil),                      // 29: api.v1.EmojiReplyEvent
-	(*ActiveUsersResponse_User)(nil),             // 30: api.v1.ActiveUsersResponse.User
-	(*PreviousEventsResponse_PreviousEvent)(nil), // 31: api.v1.PreviousEventsResponse.PreviousEvent
-	(*ChatSentEvent_Edit)(nil),                   // 32: api.v1.ChatSentEvent.Edit
-	(*ChatSentEvent_EmojiReply)(nil),             // 33: api.v1.ChatSentEvent.EmojiReply
-	(*timestamppb.Timestamp)(nil),                // 34: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                        // 35: google.protobuf.Empty
+	(UserFlag)(0),                                // 0: api.v1.UserFlag
+	(UserStatus)(0),                              // 1: api.v1.UserStatus
+	(LeaveReason)(0),                             // 2: api.v1.LeaveReason
+	(*UUID)(nil),                                 // 3: api.v1.UUID
+	(*Color)(nil),                                // 4: api.v1.Color
+	(*UserDetails)(nil),                          // 5: api.v1.UserDetails
+	(*UserMention)(nil),                          // 6: api.v1.UserMention
+	(*ChatID)(nil),                               // 7: api.v1.ChatID
+	(*JoinRequest)(nil),                          // 8: api.v1.JoinRequest
+	(*JoinResponse)(nil),                         // 9: api.v1.JoinResponse
+	(*RenewResponse)(nil),                        // 10: api.v1.RenewResponse
+	(*ActiveUsersResponse)(nil),                  // 11: api.v1.ActiveUsersResponse
+	(*UpdateDetailsRequest)(nil),                 // 12: api.v1.UpdateDetailsRequest
+	(*UpdateStatusRequest)(nil),                  // 13: api.v1.UpdateStatusRequest
+	(*IndicateTypingRequest)(nil),                // 14: api.v1.IndicateTypingRequest
+	(*SendChatRequest)(nil),                      // 15: api.v1.SendChatRequest
+	(*EditChatRequest)(nil),                      // 16: api.v1.EditChatRequest
+	(*EmojiReplyRequest)(nil),                    // 17: api.v1.EmojiReplyRequest
+	(*EventUser)(nil),                            // 18: api.v1.EventUser
+	(*PreviousEventsRequest)(nil),                // 19: api.v1.PreviousEventsRequest
+	(*PreviousEventsResponse)(nil),               // 20: api.v1.PreviousEventsResponse
+	(*EventStreamRequest)(nil),                   // 21: api.v1.EventStreamRequest
+	(*EventStreamResponse)(nil),                  // 22: api.v1.EventStreamResponse
+	(*UserJoinEvent)(nil),                        // 23: api.v1.UserJoinEvent
+	(*UserLeaveEvent)(nil),                       // 24: api.v1.UserLeaveEvent
+	(*UserUpdateEvent)(nil),                      // 25: api.v1.UserUpdateEvent
+	(*UserStatusEvent)(nil),                      // 26: api.v1.UserStatusEvent
+	(*UserTypingEvent)(nil),                      // 27: api.v1.UserTypingEvent
+	(*ChatSentEvent)(nil),                        // 28: api.v1.ChatSentEvent
+	(*ChatEditEvent)(nil),                        // 29: api.v1.ChatEditEvent
+	(*EmojiReplyEvent)(nil),                      // 30: api.v1.EmojiReplyEvent
+	(*ActiveUsersResponse_User)(nil),             // 31: api.v1.ActiveUsersResponse.User
+	(*PreviousEventsResponse_PreviousEvent)(nil), // 32: api.v1.PreviousEventsResponse.PreviousEvent
+	(*ChatSentEvent_Edit)(nil),                   // 33: api.v1.ChatSentEvent.Edit
+	(*ChatSentEvent_EmojiReply)(nil),             // 34: api.v1.ChatSentEvent.EmojiReply
+	(*timestamppb.Timestamp)(nil),                // 35: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                        // 36: google.protobuf.Empty
 }
 var file_api_v1_apiv1_proto_depIdxs = []int32{
-	3,  // 0: api.v1.UserDetails.color1:type_name -> api.v1.Color
-	3,  // 1: api.v1.UserDetails.color2:type_name -> api.v1.Color
-	2,  // 2: api.v1.UserMention.user_id:type_name -> api.v1.UUID
-	2,  // 3: api.v1.ChatID.receiver_id:type_name -> api.v1.UUID
-	2,  // 4: api.v1.ChatID.chat_id:type_name -> api.v1.UUID
-	4,  // 5: api.v1.JoinRequest.user:type_name -> api.v1.UserDetails
-	1,  // 6: api.v1.JoinRequest.flags:type_name -> api.v1.UserFlag
-	34, // 7: api.v1.ActiveUsersResponse.time:type_name -> google.protobuf.Timestamp
-	30, // 8: api.v1.ActiveUsersResponse.users:type_name -> api.v1.ActiveUsersResponse.User
-	4,  // 9: api.v1.UpdateDetailsRequest.details:type_name -> api.v1.UserDetails
-	0,  // 10: api.v1.UpdateStatusRequest.status:type_name -> api.v1.UserStatus
-	2,  // 11: api.v1.IndicateTypingRequest.receiver_id:type_name -> api.v1.UUID
-	34, // 12: api.v1.SendChatRequest.time:type_name -> google.protobuf.Timestamp
-	2,  // 13: api.v1.SendChatRequest.receiver_id:type_name -> api.v1.UUID
-	2,  // 14: api.v1.SendChatRequest.reply_chat_id:type_name -> api.v1.UUID
-	5,  // 15: api.v1.SendChatRequest.mentions:type_name -> api.v1.UserMention
-	34, // 16: api.v1.EditChatRequest.time:type_name -> google.protobuf.Timestamp
-	6,  // 17: api.v1.EditChatRequest.chat:type_name -> api.v1.ChatID
-	34, // 18: api.v1.EmojiReplyRequest.time:type_name -> google.protobuf.Timestamp
-	6,  // 19: api.v1.EmojiReplyRequest.chat:type_name -> api.v1.ChatID
-	2,  // 20: api.v1.EventUser.id:type_name -> api.v1.UUID
-	4,  // 21: api.v1.EventUser.details:type_name -> api.v1.UserDetails
-	34, // 22: api.v1.PreviousEventsRequest.until_time:type_name -> google.protobuf.Timestamp
-	31, // 23: api.v1.PreviousEventsResponse.history:type_name -> api.v1.PreviousEventsResponse.PreviousEvent
-	34, // 24: api.v1.EventStreamResponse.time:type_name -> google.protobuf.Timestamp
-	22, // 25: api.v1.EventStreamResponse.user_join:type_name -> api.v1.UserJoinEvent
-	23, // 26: api.v1.EventStreamResponse.user_leave:type_name -> api.v1.UserLeaveEvent
-	24, // 27: api.v1.EventStreamResponse.user_update:type_name -> api.v1.UserUpdateEvent
-	25, // 28: api.v1.EventStreamResponse.user_status:type_name -> api.v1.UserStatusEvent
-	26, // 29: api.v1.EventStreamResponse.user_typing:type_name -> api.v1.UserTypingEvent
-	27, // 30: api.v1.EventStreamResponse.chat_sent:type_name -> api.v1.ChatSentEvent
-	28, // 31: api.v1.EventStreamResponse.chat_edit:type_name -> api.v1.ChatEditEvent
-	29, // 32: api.v1.EventStreamResponse.emoji_reply:type_name -> api.v1.EmojiReplyEvent
-	17, // 33: api.v1.UserJoinEvent.user:type_name -> api.v1.EventUser
-	1,  // 34: api.v1.UserJoinEvent.flags:type_name -> api.v1.UserFlag
-	17, // 35: api.v1.UserLeaveEvent.user:type_name -> api.v1.EventUser
-	17, // 36: api.v1.UserUpdateEvent.user:type_name -> api.v1.EventUser
-	4,  // 37: api.v1.UserUpdateEvent.before:type_name -> api.v1.UserDetails
-	17, // 38: api.v1.UserStatusEvent.user:type_name -> api.v1.EventUser
-	0,  // 39: api.v1.UserStatusEvent.status:type_name -> api.v1.UserStatus
-	0,  // 40: api.v1.UserStatusEvent.before:type_name -> api.v1.UserStatus
-	17, // 41: api.v1.UserTypingEvent.user:type_name -> api.v1.EventUser
-	2,  // 42: api.v1.UserTypingEvent.receiver_id:type_name -> api.v1.UUID
-	2,  // 43: api.v1.ChatSentEvent.chat_id:type_name -> api.v1.UUID
-	17, // 44: api.v1.ChatSentEvent.user:type_name -> api.v1.EventUser
-	2,  // 45: api.v1.ChatSentEvent.receiver_id:type_name -> api.v1.UUID
-	2,  // 46: api.v1.ChatSentEvent.reply_chat_id:type_name -> api.v1.UUID
-	32, // 47: api.v1.ChatSentEvent.text_edit:type_name -> api.v1.ChatSentEvent.Edit
-	5,  // 48: api.v1.ChatSentEvent.mentions:type_name -> api.v1.UserMention
-	33, // 49: api.v1.ChatSentEvent.emojis:type_name -> api.v1.ChatSentEvent.EmojiReply
-	17, // 50: api.v1.ChatEditEvent.user:type_name -> api.v1.EventUser
-	6,  // 51: api.v1.ChatEditEvent.chat:type_name -> api.v1.ChatID
-	17, // 52: api.v1.EmojiReplyEvent.user:type_name -> api.v1.EventUser
-	6,  // 53: api.v1.EmojiReplyEvent.chat:type_name -> api.v1.ChatID
-	2,  // 54: api.v1.ActiveUsersResponse.User.id:type_name -> api.v1.UUID
-	4,  // 55: api.v1.ActiveUsersResponse.User.details:type_name -> api.v1.UserDetails
-	1,  // 56: api.v1.ActiveUsersResponse.User.flags:type_name -> api.v1.UserFlag
-	0,  // 57: api.v1.ActiveUsersResponse.User.status:type_name -> api.v1.UserStatus
-	34, // 58: api.v1.PreviousEventsResponse.PreviousEvent.time:type_name -> google.protobuf.Timestamp
-	22, // 59: api.v1.PreviousEventsResponse.PreviousEvent.user_join:type_name -> api.v1.UserJoinEvent
-	23, // 60: api.v1.PreviousEventsResponse.PreviousEvent.user_leave:type_name -> api.v1.UserLeaveEvent
-	24, // 61: api.v1.PreviousEventsResponse.PreviousEvent.user_update:type_name -> api.v1.UserUpdateEvent
-	27, // 62: api.v1.PreviousEventsResponse.PreviousEvent.chat_sent:type_name -> api.v1.ChatSentEvent
-	34, // 63: api.v1.ChatSentEvent.Edit.time:type_name -> google.protobuf.Timestamp
-	34, // 64: api.v1.ChatSentEvent.EmojiReply.time:type_name -> google.protobuf.Timestamp
-	17, // 65: api.v1.ChatSentEvent.EmojiReply.user:type_name -> api.v1.EventUser
-	7,  // 66: api.v1.AuthService.Join:input_type -> api.v1.JoinRequest
-	35, // 67: api.v1.AuthService.Keepalive:input_type -> google.protobuf.Empty
-	35, // 68: api.v1.AuthService.Renew:input_type -> google.protobuf.Empty
-	35, // 69: api.v1.AuthService.Leave:input_type -> google.protobuf.Empty
-	35, // 70: api.v1.RegistryService.ActiveUsers:input_type -> google.protobuf.Empty
-	11, // 71: api.v1.UserService.UpdateDetails:input_type -> api.v1.UpdateDetailsRequest
-	12, // 72: api.v1.UserService.UpdateStatus:input_type -> api.v1.UpdateStatusRequest
-	13, // 73: api.v1.UserService.IndicateTyping:input_type -> api.v1.IndicateTypingRequest
-	14, // 74: api.v1.UserService.SendChat:input_type -> api.v1.SendChatRequest
-	15, // 75: api.v1.UserService.EditChat:input_type -> api.v1.EditChatRequest
-	16, // 76: api.v1.UserService.EmojiReply:input_type -> api.v1.EmojiReplyRequest
-	18, // 77: api.v1.EventsService.PreviousEvents:input_type -> api.v1.PreviousEventsRequest
-	35, // 78: api.v1.EventsService.EventStream:input_type -> google.protobuf.Empty
-	8,  // 79: api.v1.AuthService.Join:output_type -> api.v1.JoinResponse
-	35, // 80: api.v1.AuthService.Keepalive:output_type -> google.protobuf.Empty
-	9,  // 81: api.v1.AuthService.Renew:output_type -> api.v1.RenewResponse
-	35, // 82: api.v1.AuthService.Leave:output_type -> google.protobuf.Empty
-	10, // 83: api.v1.RegistryService.ActiveUsers:output_type -> api.v1.ActiveUsersResponse
-	35, // 84: api.v1.UserService.UpdateDetails:output_type -> google.protobuf.Empty
-	35, // 85: api.v1.UserService.UpdateStatus:output_type -> google.protobuf.Empty
-	35, // 86: api.v1.UserService.IndicateTyping:output_type -> google.protobuf.Empty
-	35, // 87: api.v1.UserService.SendChat:output_type -> google.protobuf.Empty
-	35, // 88: api.v1.UserService.EditChat:output_type -> google.protobuf.Empty
-	35, // 89: api.v1.UserService.EmojiReply:output_type -> google.protobuf.Empty
-	19, // 90: api.v1.EventsService.PreviousEvents:output_type -> api.v1.PreviousEventsResponse
-	21, // 91: api.v1.EventsService.EventStream:output_type -> api.v1.EventStreamResponse
-	79, // [79:92] is the sub-list for method output_type
-	66, // [66:79] is the sub-list for method input_type
-	66, // [66:66] is the sub-list for extension type_name
-	66, // [66:66] is the sub-list for extension extendee
-	0,  // [0:66] is the sub-list for field type_name
+	4,  // 0: api.v1.UserDetails.color1:type_name -> api.v1.Color
+	4,  // 1: api.v1.UserDetails.color2:type_name -> api.v1.Color
+	3,  // 2: api.v1.UserMention.user_id:type_name -> api.v1.UUID
+	3,  // 3: api.v1.ChatID.receiver_id:type_name -> api.v1.UUID
+	3,  // 4: api.v1.ChatID.chat_id:type_name -> api.v1.UUID
+	5,  // 5: api.v1.JoinRequest.user:type_name -> api.v1.UserDetails
+	0,  // 6: api.v1.JoinRequest.flags:type_name -> api.v1.UserFlag
+	35, // 7: api.v1.ActiveUsersResponse.time:type_name -> google.protobuf.Timestamp
+	31, // 8: api.v1.ActiveUsersResponse.users:type_name -> api.v1.ActiveUsersResponse.User
+	5,  // 9: api.v1.UpdateDetailsRequest.details:type_name -> api.v1.UserDetails
+	1,  // 10: api.v1.UpdateStatusRequest.status:type_name -> api.v1.UserStatus
+	3,  // 11: api.v1.IndicateTypingRequest.receiver_id:type_name -> api.v1.UUID
+	35, // 12: api.v1.SendChatRequest.time:type_name -> google.protobuf.Timestamp
+	3,  // 13: api.v1.SendChatRequest.receiver_id:type_name -> api.v1.UUID
+	3,  // 14: api.v1.SendChatRequest.reply_chat_id:type_name -> api.v1.UUID
+	6,  // 15: api.v1.SendChatRequest.mentions:type_name -> api.v1.UserMention
+	35, // 16: api.v1.EditChatRequest.time:type_name -> google.protobuf.Timestamp
+	7,  // 17: api.v1.EditChatRequest.chat:type_name -> api.v1.ChatID
+	35, // 18: api.v1.EmojiReplyRequest.time:type_name -> google.protobuf.Timestamp
+	7,  // 19: api.v1.EmojiReplyRequest.chat:type_name -> api.v1.ChatID
+	3,  // 20: api.v1.EventUser.id:type_name -> api.v1.UUID
+	5,  // 21: api.v1.EventUser.details:type_name -> api.v1.UserDetails
+	35, // 22: api.v1.PreviousEventsRequest.until_time:type_name -> google.protobuf.Timestamp
+	32, // 23: api.v1.PreviousEventsResponse.history:type_name -> api.v1.PreviousEventsResponse.PreviousEvent
+	35, // 24: api.v1.EventStreamResponse.time:type_name -> google.protobuf.Timestamp
+	23, // 25: api.v1.EventStreamResponse.user_join:type_name -> api.v1.UserJoinEvent
+	24, // 26: api.v1.EventStreamResponse.user_leave:type_name -> api.v1.UserLeaveEvent
+	25, // 27: api.v1.EventStreamResponse.user_update:type_name -> api.v1.UserUpdateEvent
+	26, // 28: api.v1.EventStreamResponse.user_status:type_name -> api.v1.UserStatusEvent
+	27, // 29: api.v1.EventStreamResponse.user_typing:type_name -> api.v1.UserTypingEvent
+	28, // 30: api.v1.EventStreamResponse.chat_sent:type_name -> api.v1.ChatSentEvent
+	29, // 31: api.v1.EventStreamResponse.chat_edit:type_name -> api.v1.ChatEditEvent
+	30, // 32: api.v1.EventStreamResponse.emoji_reply:type_name -> api.v1.EmojiReplyEvent
+	18, // 33: api.v1.UserJoinEvent.user:type_name -> api.v1.EventUser
+	0,  // 34: api.v1.UserJoinEvent.flags:type_name -> api.v1.UserFlag
+	18, // 35: api.v1.UserLeaveEvent.user:type_name -> api.v1.EventUser
+	2,  // 36: api.v1.UserLeaveEvent.reason:type_name -> api.v1.LeaveReason
+	18, // 37: api.v1.UserUpdateEvent.user:type_name -> api.v1.EventUser
+	5,  // 38: api.v1.UserUpdateEvent.before:type_name -> api.v1.UserDetails
+	18, // 39: api.v1.UserStatusEvent.user:type_name -> api.v1.EventUser
+	1,  // 40: api.v1.UserStatusEvent.status:type_name -> api.v1.UserStatus
+	1,  // 41: api.v1.UserStatusEvent.before:type_name -> api.v1.UserStatus
+	18, // 42: api.v1.UserTypingEvent.user:type_name -> api.v1.EventUser
+	3,  // 43: api.v1.UserTypingEvent.receiver_id:type_name -> api.v1.UUID
+	3,  // 44: api.v1.ChatSentEvent.chat_id:type_name -> api.v1.UUID
+	18, // 45: api.v1.ChatSentEvent.user:type_name -> api.v1.EventUser
+	3,  // 46: api.v1.ChatSentEvent.receiver_id:type_name -> api.v1.UUID
+	3,  // 47: api.v1.ChatSentEvent.reply_chat_id:type_name -> api.v1.UUID
+	33, // 48: api.v1.ChatSentEvent.text_edit:type_name -> api.v1.ChatSentEvent.Edit
+	6,  // 49: api.v1.ChatSentEvent.mentions:type_name -> api.v1.UserMention
+	34, // 50: api.v1.ChatSentEvent.emojis:type_name -> api.v1.ChatSentEvent.EmojiReply
+	18, // 51: api.v1.ChatEditEvent.user:type_name -> api.v1.EventUser
+	7,  // 52: api.v1.ChatEditEvent.chat:type_name -> api.v1.ChatID
+	18, // 53: api.v1.EmojiReplyEvent.user:type_name -> api.v1.EventUser
+	7,  // 54: api.v1.EmojiReplyEvent.chat:type_name -> api.v1.ChatID
+	3,  // 55: api.v1.ActiveUsersResponse.User.id:type_name -> api.v1.UUID
+	5,  // 56: api.v1.ActiveUsersResponse.User.details:type_name -> api.v1.UserDetails
+	0,  // 57: api.v1.ActiveUsersResponse.User.flags:type_name -> api.v1.UserFlag
+	1,  // 58: api.v1.ActiveUsersResponse.User.status:type_name -> api.v1.UserStatus
+	35, // 59: api.v1.PreviousEventsResponse.PreviousEvent.time:type_name -> google.protobuf.Timestamp
+	23, // 60: api.v1.PreviousEventsResponse.PreviousEvent.user_join:type_name -> api.v1.UserJoinEvent
+	24, // 61: api.v1.PreviousEventsResponse.PreviousEvent.user_leave:type_name -> api.v1.UserLeaveEvent
+	25, // 62: api.v1.PreviousEventsResponse.PreviousEvent.user_update:type_name -> api.v1.UserUpdateEvent
+	28, // 63: api.v1.PreviousEventsResponse.PreviousEvent.chat_sent:type_name -> api.v1.ChatSentEvent
+	35, // 64: api.v1.ChatSentEvent.Edit.time:type_name -> google.protobuf.Timestamp
+	35, // 65: api.v1.ChatSentEvent.EmojiReply.time:type_name -> google.protobuf.Timestamp
+	18, // 66: api.v1.ChatSentEvent.EmojiReply.user:type_name -> api.v1.EventUser
+	8,  // 67: api.v1.AuthService.Join:input_type -> api.v1.JoinRequest
+	36, // 68: api.v1.AuthService.Keepalive:input_type -> google.protobuf.Empty
+	36, // 69: api.v1.AuthService.Renew:input_type -> google.protobuf.Empty
+	36, // 70: api.v1.AuthService.Leave:input_type -> google.protobuf.Empty
+	36, // 71: api.v1.RegistryService.ActiveUsers:input_type -> google.protobuf.Empty
+	12, // 72: api.v1.UserService.UpdateDetails:input_type -> api.v1.UpdateDetailsRequest
+	13, // 73: api.v1.UserService.UpdateStatus:input_type -> api.v1.UpdateStatusRequest
+	14, // 74: api.v1.UserService.IndicateTyping:input_type -> api.v1.IndicateTypingRequest
+	15, // 75: api.v1.UserService.SendChat:input_type -> api.v1.SendChatRequest
+	16, // 76: api.v1.UserService.EditChat:input_type -> api.v1.EditChatRequest
+	17, // 77: api.v1.UserService.EmojiReply:input_type -> api.v1.EmojiReplyRequest
+	19, // 78: api.v1.EventsService.PreviousEvents:input_type -> api.v1.PreviousEventsRequest
+	36, // 79: api.v1.EventsService.EventStream:input_type -> google.protobuf.Empty
+	9,  // 80: api.v1.AuthService.Join:output_type -> api.v1.JoinResponse
+	36, // 81: api.v1.AuthService.Keepalive:output_type -> google.protobuf.Empty
+	10, // 82: api.v1.AuthService.Renew:output_type -> api.v1.RenewResponse
+	36, // 83: api.v1.AuthService.Leave:output_type -> google.protobuf.Empty
+	11, // 84: api.v1.RegistryService.ActiveUsers:output_type -> api.v1.ActiveUsersResponse
+	36, // 85: api.v1.UserService.UpdateDetails:output_type -> google.protobuf.Empty
+	36, // 86: api.v1.UserService.UpdateStatus:output_type -> google.protobuf.Empty
+	36, // 87: api.v1.UserService.IndicateTyping:output_type -> google.protobuf.Empty
+	36, // 88: api.v1.UserService.SendChat:output_type -> google.protobuf.Empty
+	36, // 89: api.v1.UserService.EditChat:output_type -> google.protobuf.Empty
+	36, // 90: api.v1.UserService.EmojiReply:output_type -> google.protobuf.Empty
+	20, // 91: api.v1.EventsService.PreviousEvents:output_type -> api.v1.PreviousEventsResponse
+	22, // 92: api.v1.EventsService.EventStream:output_type -> api.v1.EventStreamResponse
+	80, // [80:93] is the sub-list for method output_type
+	67, // [67:80] is the sub-list for method input_type
+	67, // [67:67] is the sub-list for extension type_name
+	67, // [67:67] is the sub-list for extension extendee
+	0,  // [0:67] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_apiv1_proto_init() }
@@ -2495,7 +2563,7 @@ func file_api_v1_apiv1_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_apiv1_proto_rawDesc), len(file_api_v1_apiv1_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      3,
 			NumMessages:   32,
 			NumExtensions: 0,
 			NumServices:   4,

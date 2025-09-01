@@ -6,10 +6,12 @@ package apiv1connect
 
 import (
 	"context"
+	"time"
 
 	"connectrpc.com/connect"
 	"github.com/roeldev/demo-chatroom/api/v1"
 	"github.com/roeldev/demo-chatroom/chatauth"
+	"github.com/roeldev/demo-chatroom/chatevents/event"
 	"github.com/roeldev/demo-chatroom/chatusers"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -35,19 +37,42 @@ func (svc *AuthService) Join(_ context.Context, req *connect.Request[apiv1.JoinR
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 
-	_, token, err := svc.auth.Join(*user, requestSecretSalter(req))
+	uid, token, err := svc.auth.Join(*user, requestSecretSalter(req))
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
+
+	svc.log.Info().
+		Str("user", chatusers.IdentifierString(uid, user.UserDetails)).
+		Str("token", token).
+		Msg("user joins")
 
 	return connect.NewResponse(&apiv1.JoinResponse{
 		Token: token,
 	}), nil
 }
 
-func (svc *AuthService) Keepalive(ctx context.Context, _ *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
-	//TODO implement me
-	panic("implement me")
+func (svc *AuthService) Keepalive(ctx context.Context, stream *connect.ClientStream[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
+	streamStart := time.Now()
+
+	user := getUser(ctx)
+	svc.log.Debug().
+		Stringer("user", user).
+		Msg("start keepalive")
+
+	defer func() {
+		svc.auth.Leave(user.ID, event.Disconnected)
+
+		svc.log.Debug().
+			Stringer("user", user).
+			Stringer("duration", time.Since(streamStart)).
+			Msg("close keepalive")
+	}()
+
+	for stream.Receive() {
+	}
+
+	return connect.NewResponse(&emptypb.Empty{}), nil
 }
 
 func (svc *AuthService) Renew(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[apiv1.RenewResponse], error) {
@@ -59,12 +84,23 @@ func (svc *AuthService) Renew(ctx context.Context, req *connect.Request[emptypb.
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
+	user := getUser(ctx)
+	svc.log.Info().
+		Stringer("user", user).
+		Str("token", token).
+		Msg("renew token")
+
 	return connect.NewResponse(&apiv1.RenewResponse{
 		Token: token,
 	}), nil
 }
 
 func (svc *AuthService) Leave(ctx context.Context, _ *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
-	svc.auth.Leave(getClaims(ctx).UserID)
+	user := getUser(ctx)
+	svc.log.Info().
+		Stringer("user", user).
+		Msg("user leaves")
+
+	svc.auth.Leave(user.ID, event.UserLeave)
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }

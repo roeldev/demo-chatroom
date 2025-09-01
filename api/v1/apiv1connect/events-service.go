@@ -71,19 +71,19 @@ func (svc *EventsService) EventStream(ctx context.Context, _ *connect.Request[em
 	user := getUser(ctx)
 	svc.log.Debug().
 		Stringer("user", user).
-		Msg("start stream")
+		Msg("start event stream")
 
 	ch := svc.events.subscribe(user.ID)
 	defer func() {
 		svc.events.unsubscribe(user.ID)
 		if svc.leaver != nil {
-			svc.leaver.Leave(user.ID)
+			svc.leaver.Leave(user.ID, event.Disconnected)
 		}
 
 		svc.log.Debug().
 			Stringer("user", user).
 			Stringer("duration", time.Since(streamStart)).
-			Msg("close stream")
+			Msg("close event stream")
 	}()
 
 streamLoop:
@@ -109,7 +109,7 @@ streamLoop:
 					Stringer("open", evt.Time.Sub(streamStart)).
 					EmbedObject(evt).
 					Stringer("to", user).
-					Msg("sent stream event")
+					Msg("stream event")
 				continue streamLoop
 			}
 

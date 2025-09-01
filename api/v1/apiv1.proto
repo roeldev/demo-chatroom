@@ -54,7 +54,7 @@ message ChatID {
 
 service AuthService {
     rpc Join(JoinRequest) returns (JoinResponse) {}
-    rpc Keepalive(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+    rpc Keepalive(stream google.protobuf.Empty) returns (google.protobuf.Empty) {}
     rpc Renew(google.protobuf.Empty) returns (RenewResponse) {}
     rpc Leave(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
@@ -195,9 +195,15 @@ message UserJoinEvent {
     UserFlag flags = 2;
 }
 
+enum LeaveReason {
+    LEAVE_REASON_USER_ACTION = 0;
+    LEAVE_REASON_DISCONNECTED = 1;
+}
+
 // User leaves
 message UserLeaveEvent {
     EventUser user = 1;
+    LeaveReason reason = 2;
 }
 
 // User update's its details

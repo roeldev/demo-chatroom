@@ -77,7 +77,7 @@ const (
 // AuthServiceClient is a client for the api.v1.AuthService service.
 type AuthServiceClient interface {
 	Join(context.Context, *connect.Request[v1.JoinRequest]) (*connect.Response[v1.JoinResponse], error)
-	Keepalive(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
+	Keepalive(context.Context) *connect.ClientStreamForClient[emptypb.Empty, emptypb.Empty]
 	Renew(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RenewResponse], error)
 	Leave(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 }
@@ -134,8 +134,8 @@ func (c *authServiceClient) Join(ctx context.Context, req *connect.Request[v1.Jo
 }
 
 // Keepalive calls api.v1.AuthService.Keepalive.
-func (c *authServiceClient) Keepalive(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
-	return c.keepalive.CallUnary(ctx, req)
+func (c *authServiceClient) Keepalive(ctx context.Context) *connect.ClientStreamForClient[emptypb.Empty, emptypb.Empty] {
+	return c.keepalive.CallClientStream(ctx)
 }
 
 // Renew calls api.v1.AuthService.Renew.
@@ -151,7 +151,7 @@ func (c *authServiceClient) Leave(ctx context.Context, req *connect.Request[empt
 // AuthServiceHandler is an implementation of the api.v1.AuthService service.
 type AuthServiceHandler interface {
 	Join(context.Context, *connect.Request[v1.JoinRequest]) (*connect.Response[v1.JoinResponse], error)
-	Keepalive(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
+	Keepalive(context.Context, *connect.ClientStream[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 	Renew(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RenewResponse], error)
 	Leave(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error)
 }
@@ -169,7 +169,7 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(authServiceMethods.ByName("Join")),
 		connect.WithHandlerOptions(opts...),
 	)
-	authServiceKeepaliveHandler := connect.NewUnaryHandler(
+	authServiceKeepaliveHandler := connect.NewClientStreamHandler(
 		AuthServiceKeepaliveProcedure,
 		svc.Keepalive,
 		connect.WithSchema(authServiceMethods.ByName("Keepalive")),
@@ -210,7 +210,7 @@ func (UnimplementedAuthServiceHandler) Join(context.Context, *connect.Request[v1
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.AuthService.Join is not implemented"))
 }
 
-func (UnimplementedAuthServiceHandler) Keepalive(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
+func (UnimplementedAuthServiceHandler) Keepalive(context.Context, *connect.ClientStream[emptypb.Empty]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.AuthService.Keepalive is not implemented"))
 }
 
