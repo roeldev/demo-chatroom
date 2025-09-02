@@ -1,0 +1,4 @@
+body, main {
+    background-size: 15px 15px;
+    background-image: repeating-linear-gradient(315deg,var(--muted)0,var(--muted)1px,transparent 0,transparent 50%)
+}
