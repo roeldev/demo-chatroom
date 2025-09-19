@@ -23,3 +23,21 @@ func (x *UUID) ParseUUID() (uuid.UUID, error) {
 	}
 	return uuid.Parse(x.Value)
 }
+
+func (x *ChatID) ParseUUIDs() (uuid.UUID, uuid.UUID, error) {
+	if x == nil {
+		return uuid.Nil, uuid.Nil, nil
+	}
+
+	chat, err := x.ChatId.ParseUUID()
+	if err != nil {
+		return chat, uuid.Nil, err
+	}
+
+	recv, err := x.ReceiverId.ParseUUID()
+	if err != nil {
+		return chat, recv, err
+	}
+
+	return chat, recv, nil
+}

@@ -65,13 +65,12 @@ func (svc *UserService) UpdateStatus(ctx context.Context, req *connect.Request[a
 }
 
 func (svc *UserService) IndicateTyping(ctx context.Context, req *connect.Request[apiv1.IndicateTypingRequest]) (*connect.Response[emptypb.Empty], error) {
-	user := getUser(ctx)
-
 	receiver, err := req.Msg.ReceiverId.ParseUUID()
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 
+	user := getUser(ctx)
 	svc.typing.IndicateTyping(user.ID, req.Msg.Typing, func(typing bool) {
 		svc.event.Publish(&event.UserTypingEvent{
 			UserID:      user.ID,
@@ -85,13 +84,12 @@ func (svc *UserService) IndicateTyping(ctx context.Context, req *connect.Request
 }
 
 func (svc *UserService) SendChat(ctx context.Context, req *connect.Request[apiv1.SendChatRequest]) (*connect.Response[emptypb.Empty], error) {
-	user := getUser(ctx)
-
 	receiver, err := req.Msg.ReceiverId.ParseUUID()
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 
+	user := getUser(ctx)
 	go svc.event.Publish(&event.ChatEvent{
 		ChatID:      uuid.New(),
 		UserID:      user.ID,
@@ -103,12 +101,41 @@ func (svc *UserService) SendChat(ctx context.Context, req *connect.Request[apiv1
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }
 
-func (svc *UserService) EditChat(ctx context.Context, c *connect.Request[apiv1.EditChatRequest]) (*connect.Response[emptypb.Empty], error) {
-	//TODO implement me
-	panic("implement me")
+func (svc *UserService) EditChat(_ context.Context, req *connect.Request[apiv1.EditChatRequest]) (*connect.Response[emptypb.Empty], error) {
+	chat, receiver, err := req.Msg.Chat.ParseUUIDs()
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+	if chat == uuid.Nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, ErrInvalidChatID)
+	}
+
+	go svc.event.Publish(&event.ChatEditEvent{
+		ChatID:     chat,
+		ReceiverID: receiver,
+		Text:       req.Msg.Text,
+	})
+
+	return connect.NewResponse(&emptypb.Empty{}), nil
 }
 
-func (svc *UserService) EmojiReply(ctx context.Context, c *connect.Request[apiv1.EmojiReplyRequest]) (*connect.Response[emptypb.Empty], error) {
-	//TODO implement me
-	panic("implement me")
+func (svc *UserService) EmojiReply(ctx context.Context, req *connect.Request[apiv1.EmojiReplyRequest]) (*connect.Response[emptypb.Empty], error) {
+	chat, _, err := req.Msg.Chat.ParseUUIDs()
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+	if chat == uuid.Nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, ErrInvalidChatID)
+	}
+
+	user := getUser(ctx)
+	go svc.event.Publish(&event.EmojiReplyEvent{
+		UserID:      user.ID,
+		UserDetails: user.UserDetails,
+		ReplyChatID: chat,
+		Emoji:       string(req.Msg.Emoji),
+		Add:         req.Msg.Add,
+	})
+
+	return connect.NewResponse(&emptypb.Empty{}), nil
 }
