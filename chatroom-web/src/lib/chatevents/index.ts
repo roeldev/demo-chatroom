@@ -3,12 +3,18 @@
 // license that can be found in the LICENSE file.
 
 import { type Event } from "./event.ts";
-import * as EventType from "$lib/chatevents/event-types.ts";
-import { EventStreamer, type EventStreamHandler } from "./stream.svelte.ts";
+import * as EventType from "./event.ts";
+
+import {
+    EventStreamer,
+    type EventStreamHandler,
+    type PreviousEventHandler
+} from "./stream.svelte.ts";
 
 export {
     type Event,
     EventType,
     EventStreamer,
-    type EventStreamHandler
+    type EventStreamHandler,
+    type PreviousEventHandler
 }

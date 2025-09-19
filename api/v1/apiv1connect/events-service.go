@@ -48,7 +48,7 @@ func (svc *EventsService) PreviousEvents(_ context.Context, req *connect.Request
 		until = req.Msg.UntilTime.AsTime()
 	}
 
-	events := svc.history.ListEvents(until, req.Msg.Limit)
+	events := svc.history.ListEvents(until, int(req.Msg.Limit))
 	history := make([]*apiv1.PreviousEventsResponse_PreviousEvent, 0, len(events))
 
 	for _, evt := range events {

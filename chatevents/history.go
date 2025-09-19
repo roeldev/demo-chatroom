@@ -20,7 +20,7 @@ type HistoryHandler struct {
 
 func NewHistoryHandler(store EventsStore) *HistoryHandler {
 	if store == nil {
-		store = NewEventsStore(32)
+		store = NewLimitedEventsStore(DefaultLimitedSize)
 	}
 	return &HistoryHandler{
 		EventsStore: store,

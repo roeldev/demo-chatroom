@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
+	// noinspection ES6UnusedImports
+	import LoaderIcon from "@lucide/svelte/icons/loader";
 
 	import { EventStreamer } from "$lib/chatevents";
 	import { getUsersList } from "$lib/chatusers";
@@ -9,13 +11,19 @@
 	import { initChatViewport } from "./chat-viewport.svelte.ts";
 	import UserTyping from "./user-typing.svelte";
 
+	let loading = $state(true);
 	const viewport = initChatViewport();
 
 	onMount(() => {
-		const streamer = new EventStreamer([viewport, getUsersList()]);
-		streamer.stream(async () => {
-			await viewport.updateAfterStreamEvent();
-		})
+		const handler = viewport.getEventsHandler()
+		const events = new EventStreamer();
+		events.stream([handler, getUsersList()], async () => {
+			await viewport.updateScrollPosition();
+		});
+
+		events.loadPrevious([handler]);
+		viewport.updateScrollPosition();
+		loading = false;
 	});
 
 	let {
@@ -36,12 +44,17 @@
 			className,
 		)}
 	>
-		<div id="previous-events">
-			Loading previous events...
-		</div>
+		{#if loading}
+			<div class="flex mb-2 text-sm">
+				<div class="flex mx-auto px-3 py-2">
+					<LoaderIcon class="animate-spin"/>
+					<span class="grid flex-1 pl-2">Loading previous events...</span>
+				</div>
+			</div>
+		{/if}
 
-		{#each viewport.getViewsEntries() as [user, view]}
-			<ChatView list={view.getEvents()} user={user}/>
+		{#each viewport.getViewsEntries() as [_, view]}
+			<ChatView view={view}/>
 		{/each}
 
 		{#if viewport.getUsersTyping().size > 3}

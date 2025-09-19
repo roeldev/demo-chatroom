@@ -20,11 +20,11 @@ message Color {
     string value = 1;
 }
 
-enum UserStatus {
-    USER_STATUS_DEFAULT = 0;
-    USER_STATUS_UNRESPONSIVE = 1;
-    USER_STATUS_BUSY = 2;
-    USER_STATUS_AWAY = 3;
+message UserDetails {
+    string name = 1;
+    string initials = 2; // max 3 chars
+    Color color1 = 3; // avatar background
+    Color color2 = 4; // avatar text
 }
 
 enum UserFlag {
@@ -33,11 +33,11 @@ enum UserFlag {
     USER_FLAG_NO_DM = 2; // indicate user does not accept direct/private messages
 }
 
-message UserDetails {
-    string name = 1;
-    string initials = 2; // max 3 chars
-    Color color1 = 3; // avatar background
-    Color color2 = 4; // avatar text
+enum UserStatus {
+    USER_STATUS_DEFAULT = 0;
+    USER_STATUS_UNRESPONSIVE = 1;
+    USER_STATUS_BUSY = 2;
+    USER_STATUS_AWAY = 3;
 }
 
 message UserMention {
@@ -46,8 +46,8 @@ message UserMention {
 }
 
 message ChatID {
-    UUID receiver_id = 1; // empty = global chatroom
-    UUID chat_id = 2;
+    UUID chat_id = 1;
+    UUID receiver_id = 2; // empty = global chatroom
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +149,7 @@ service EventsService {
 
 message PreviousEventsRequest {
     google.protobuf.Timestamp until_time = 1;
-    uint64 limit = 2;
+    uint32 limit = 2;
 }
 
 message PreviousEventsResponse {

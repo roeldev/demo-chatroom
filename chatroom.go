@@ -2,6 +2,8 @@
 // Use of this source code is governed by a GPL-style
 // license that can be found in the LICENSE file.
 
+//go:generate go run ./cmd/gen-dotenv.go
+
 package chatroom
 
 import (
@@ -67,16 +69,14 @@ func NewService(conf Config, log *logger.Logger, opts ...Option) (*Service, erro
 	if svc.users == nil {
 		svc.users = chatusers.NewUsersStore(8)
 	}
-	if svc.history == nil {
-		svc.history = chatevents.NewHistoryHandler(chatevents.NewEventsStore(32))
-		if svc.broker != nil {
-			svc.broker.Handle(svc.history)
-		}
-	}
 	if svc.broker == nil {
-		svc.broker = chatevents.NewEventsBroker(svc.log, svc.history)
+		svc.broker = chatevents.NewEventsBroker()
+	}
+	if svc.history == nil {
+		svc.history = chatevents.NewHistoryHandler(chatevents.NewLimitedEventsStore(32))
 	}
 
+	svc.broker.Handle(svc.history)
 	svc.manager = chatauth.NewManager(svc.auth, svc.users, svc.broker)
 	svc.interceptor = apiv1connect.NewHandlerInterceptor(svc.log, svc.auth, svc.users)
 	return svc, nil

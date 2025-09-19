@@ -1025,7 +1025,7 @@ func (x *EventUser) GetDetails() *UserDetails {
 type PreviousEventsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UntilTime     *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=until_time,json=untilTime" json:"until_time,omitempty"`
-	Limit         uint64                 `protobuf:"varint,2,opt,name=limit" json:"limit,omitempty"`
+	Limit         uint32                 `protobuf:"varint,2,opt,name=limit" json:"limit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1067,7 +1067,7 @@ func (x *PreviousEventsRequest) GetUntilTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *PreviousEventsRequest) GetLimit() uint64 {
+func (x *PreviousEventsRequest) GetLimit() uint32 {
 	if x != nil {
 		return x.Limit
 	}
@@ -2268,7 +2268,7 @@ const file_api_v1_apiv1_proto_rawDesc = "" +
 	"\x15PreviousEventsRequest\x129\n" +
 	"\n" +
 	"until_time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tuntilTime\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x04R\x05limit\"\x8c\x03\n" +
+	"\x05limit\x18\x02 \x01(\rR\x05limit\"\x8c\x03\n" +
 	"\x16PreviousEventsResponse\x12F\n" +
 	"\ahistory\x18\x01 \x03(\v2,.api.v1.PreviousEventsResponse.PreviousEventR\ahistory\x1a\xa9\x02\n" +
 	"\rPreviousEvent\x12.\n" +

@@ -10,24 +10,36 @@ export interface EventStreamHandler {
     handleEventStream(res: API.EventStreamResponse): boolean
 }
 
+export interface PreviousEventHandler {
+    handlePreviousEvent(res: API.PreviousEventsResponse): boolean
+}
+
 // EventStreamer
 export class EventStreamer {
     private readonly client: Client<typeof API.EventsService>;
-    private readonly handlers: EventStreamHandler[] = [];
     private active: boolean = true;
 
-    constructor(handlers: EventStreamHandler[], transport?: Transport) {
-        this.handlers = handlers;
+    constructor(transport?: Transport) {
         this.client = createClient(
             API.EventsService,
             transport ?? getContext('transport'),
         );
     }
 
-    async stream(callbackFn: () => void) {
+    loadPrevious(handlers: PreviousEventHandler[]) {
+        this.client.previousEvents({
+            limit: 100,
+        }).then((res) => {
+            handlers.every(h => h.handlePreviousEvent(res));
+        }).catch((err) => {
+            console.log("err loading previous events", err)
+        });
+    }
+
+    async stream(handlers: EventStreamHandler[], callbackFn: () => void) {
         while (this.active) {
             for await (const res of this.client.eventStream({})) {
-                this.handlers.every(h => h.handleEventStream(res));
+                handlers.every(h => h.handleEventStream(res));
                 if (!!callbackFn) {
                     callbackFn();
                 }

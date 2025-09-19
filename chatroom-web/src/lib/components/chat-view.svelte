@@ -1,20 +1,17 @@
 <script lang="ts">
-	import { type Event } from '$lib/chatevents';
-	import { type UUID } from '$lib/chatusers';
 	// noinspection ES6UnusedImports
 	import * as ChatEvent from '$lib/components/chatevents';
+	import type { ChatView } from "./chat-view.svelte.ts";
 
 	let {
-		list,
-		user
+		view,
 	}: {
-		list: Event[],
-		user?: UUID,
+		view: ChatView,
 	} = $props();
 </script>
 
-<div data-view={user ?? "global"}>
-	{#each list as event}
+<div data-view={view.owner ?? "global"}>
+	{#each view.getEvents() as event}
 		{#if event.case == "userJoin"}
 			<ChatEvent.UserJoin {...event.value} />
 		{:else if event.case == "userLeave"}
@@ -24,7 +21,7 @@
 		{:else if event.case == "userStatus"}
 			<ChatEvent.UserStatus {...event.value} />
 		{:else if event.case == "receivedChat"}
-			<ChatEvent.ReceivedChat {...event.value} />
+			<ChatEvent.ReceivedChat showAvatar {...event.value} />
 		{:else if event.case == "sentChat"}
 			<ChatEvent.SentChat {...event.value} />
 		{/if}
