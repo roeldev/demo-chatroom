@@ -8,7 +8,12 @@ services:
     user: nonroot
     env_file:
       - ./cmd/api-server/.env
-      - ./cmd/api-server/.env.local
+    environment:
+      LOG_LEVEL: info
+      CORS_ALLOW_ORIGINS: http://localhost:8081,http://localhost:5173
+    networks:
+      - public
+      - internal
     ports:
       - "8080:8080"
 
@@ -21,14 +26,17 @@ services:
     user: nonroot
     env_file:
       - ./cmd/web-server/.env
-      - ./cmd/web-server/.env.local
+    depends_on:
+      - api
+    networks:
+      - public
+      - internal
     ports:
       - "8081:8080"
 
   chatter-bot:
     image: roeldev/demo-chatroom-chatter-bot:local
     build:
-      network: host
       context: .
       args:
         APP: chatter-bot
@@ -36,8 +44,12 @@ services:
     env_file:
       - ./cmd/chatter-bot/.env
     environment:
-      LOG_LEVEL: debug
-      API_SERVER_HOST: host.docker.internal
+#      LOG_LEVEL: debug
+      API_SERVER_HOST: api
+    depends_on:
+      - api
+    networks:
+      - internal
     deploy:
       replicas: 8
       mode: replicated
@@ -51,3 +63,15 @@ services:
     user: nonroot
     env_file:
       - ./cmd/welcome-bot/.env
+    environment:
+#      LOG_LEVEL: debug
+      API_SERVER_HOST: api
+    depends_on:
+      - api
+    networks:
+      - internal
+
+networks:
+  public:
+    driver: bridge
+  internal:
