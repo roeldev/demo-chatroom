@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="test" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="demo-chatroom" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value="-race" />
+    <kind value="DIRECTORY" />
+    <package value="github.com/roeldev/demo-chatroom/..." />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gotest" />
+    <method v="2" />
+  </configuration>
+</component>
