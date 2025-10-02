@@ -49,7 +49,7 @@ func (man *Manager) Join(user chatusers.User, salter SecretSalter) (chatusers.Us
 	return uid, token, nil
 }
 
-func (man *Manager) Leave(uid chatusers.UserID) {
+func (man *Manager) Leave(uid chatusers.UserID, reason event.LeaveReason) {
 	if user, ok := man.users.Delete(uid); ok {
 		man.event.Publish(&event.UserLeaveEvent{
 			UserID:      uid,
