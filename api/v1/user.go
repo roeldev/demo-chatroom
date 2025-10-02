@@ -41,8 +41,13 @@ func NewUserFlags(flag chatusers.Flag) UserFlag {
 	switch flag {
 	case chatusers.Flag_None:
 		return UserFlag_USER_FLAG_NONE
+
 	case chatusers.Flag_IsBot:
 		return UserFlag_USER_FLAG_IS_BOT
+
+	case chatusers.Flag_NoDirectMessages:
+		return UserFlag_USER_FLAG_NO_DM
+
 	default:
 		panic("apiv1: Flag " + itoa(int64(flag)) + " is invalid")
 	}
@@ -52,8 +57,13 @@ func (x UserFlag) ToChatUserFlags() chatusers.Flag {
 	switch x {
 	case UserFlag_USER_FLAG_NONE:
 		return chatusers.Flag_None
+
 	case UserFlag_USER_FLAG_IS_BOT:
 		return chatusers.Flag_IsBot
+
+	case UserFlag_USER_FLAG_NO_DM:
+		return chatusers.Flag_NoDirectMessages
+
 	default:
 		panic("apiv1: UserFlag " + itoa(int64(x)) + " is invalid")
 	}
@@ -63,10 +73,16 @@ func NewUserStatus(stat chatusers.Status) UserStatus {
 	switch stat {
 	case chatusers.Status_Default:
 		return UserStatus_USER_STATUS_DEFAULT
+
+	case chatusers.Status_Unresponsive:
+		return UserStatus_USER_STATUS_UNRESPONSIVE
+
 	case chatusers.Status_Busy:
 		return UserStatus_USER_STATUS_BUSY
+
 	case chatusers.Status_Away:
 		return UserStatus_USER_STATUS_AWAY
+
 	default:
 		panic("apiv1: Status " + itoa(int64(stat)) + " is invalid")
 	}
@@ -76,10 +92,16 @@ func (x UserStatus) ToChatUserStatus() chatusers.Status {
 	switch x {
 	case UserStatus_USER_STATUS_DEFAULT:
 		return chatusers.Status_Default
+
+	case UserStatus_USER_STATUS_UNRESPONSIVE:
+		return chatusers.Status_Unresponsive
+
 	case UserStatus_USER_STATUS_BUSY:
 		return chatusers.Status_Busy
+
 	case UserStatus_USER_STATUS_AWAY:
 		return chatusers.Status_Away
+
 	default:
 		panic("apiv1: UserStatus " + itoa(int64(x)) + " is invalid")
 	}
